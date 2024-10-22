@@ -1,6 +1,7 @@
-package com.example.hustbill.utils.window
+package com.example.hustbill.utils.watching
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Binder
@@ -14,9 +15,6 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.example.hustbill.R
 import com.example.hustbill.databinding.LayoutFloatingImageBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class WindowService: LifecycleService(){
@@ -24,9 +22,9 @@ class WindowService: LifecycleService(){
     private val watchingBinder = WatchingBinder()
 
     inner class WatchingBinder: Binder(){
-        fun runOnService(onSuccess:()->Unit){
+        fun runOnService(onSuccess:suspend (Context)->Unit){
             lifecycleScope.launch {
-                onSuccess.invoke()
+                onSuccess.invoke(this@WindowService)
             }
         }
         fun updateText(text:String){
@@ -38,6 +36,7 @@ class WindowService: LifecycleService(){
 
     override fun onBind(intent: Intent): IBinder {
         super.onBind(intent)
+        showFloatingWindow()
         return watchingBinder
     }
 
@@ -51,7 +50,6 @@ class WindowService: LifecycleService(){
         viewBinding = LayoutFloatingImageBinding.inflate(LayoutInflater.from(this))
         //获取WindowManager服务
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        viewBinding?.imgView?.setImageResource(R.mipmap.ic_launcher_round)
 
         //设置LayoutParam
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -76,14 +74,8 @@ class WindowService: LifecycleService(){
         windowManager?.removeView(viewBinding?.root)
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        showFloatingWindow()
-        return super.onStartCommand(intent, flags, startId)
-    }
-
-    override fun onDestroy() {
+    override fun onUnbind(intent: Intent?): Boolean {
         removeFloatingWindow()
-        super.onDestroy()
+        return super.onUnbind(intent)
     }
-
 }

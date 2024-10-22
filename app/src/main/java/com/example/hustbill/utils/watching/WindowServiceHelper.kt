@@ -1,4 +1,4 @@
-package com.example.hustbill.utils.window
+package com.example.hustbill.utils.watching
 
 import android.content.ComponentName
 import android.content.Context
@@ -12,7 +12,7 @@ class WindowServiceHelper {
     private var watchingBinder : WindowService.WatchingBinder? = null
     private var watchingConnection : ServiceConnection? = null
 
-    fun connectToService(context: Context,onSuccess: () -> Unit) {
+    fun connectToService(context: Context,onSuccess:suspend (Context) -> Unit) {
         watchingBinder?.run{
             runOnService(onSuccess)
             return
