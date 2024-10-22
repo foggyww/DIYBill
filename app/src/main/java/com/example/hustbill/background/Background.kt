@@ -8,16 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.example.hustbill.ui.theme.Gap
 import com.example.hustbill.ui.theme.colors
 import com.example.hustbill.utils.click
 
 @Composable
 fun MainBackground(
-    padding : Dp = Gap.Mid,
+    padding : Dp = 0.dp,
     content : @Composable ColumnScope.()->Unit
 ){
     Surface(modifier = Modifier.fillMaxSize()
@@ -36,7 +35,7 @@ fun MainBackground(
 
 @Composable
 fun SettingBackground(
-    padding : Dp = Gap.Mid,
+    padding : Dp = 0.dp,
     content : @Composable ()->Unit
 ){
     Column(

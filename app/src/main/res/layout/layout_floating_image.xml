@@ -8,47 +8,15 @@
 
 
     <androidx.cardview.widget.CardView
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:cardCornerRadius="65dp">
 
 
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true">
-
-            <!-- 大组件图片 -->
-            <ImageView
-                android:id="@+id/imgView"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:src="@mipmap/ic_launcher_round"
-                android:scaleType="centerCrop" />
-
-            <!-- 小组件线性布局 -->
-            <FrameLayout
-                android:layout_width="65dp"
-                android:layout_height="20dp"
-                android:background="@color/green"
-                android:layout_gravity="center_horizontal|bottom">
-                <LinearLayout
-                    android:id="@+id/llSmallComponent"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:background="@color/green"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/yellow"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1.2dp"
-                        android:background="@color/black_green"/>
-
-                </LinearLayout>
 
                 <TextView
                     android:id="@+id/textView"
@@ -56,14 +24,11 @@
                     android:layout_height="wrap_content"
                     android:textSize="12.sp"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_marginTop="1dp"
-                    android:layout_gravity="top|center_horizontal"
-                    android:text="01:30" />
+                    android:layout_gravity="center_vertical|center_horizontal"/>
             </FrameLayout>
 
-
-        </FrameLayout>
 
     </androidx.cardview.widget.CardView>
 

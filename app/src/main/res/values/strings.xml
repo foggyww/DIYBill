@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HustBill</string>
+    <string name="service_name">自动记账</string>
 </resources>
