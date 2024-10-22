@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -68,6 +69,11 @@ dependencies {
     implementation(libs.android.arch.lifecycle)
     implementation(libs.androidx.coordinatorlayout)
     implementation(libs.androidx.cardview)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.navigation.animation)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
