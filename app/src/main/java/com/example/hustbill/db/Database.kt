@@ -3,12 +3,15 @@ package com.example.hustbill.db
 import android.content.Context
 import androidx.room.Dao
 import androidx.room.Database
+import androidx.room.Delete
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.Update
 import com.example.hustbill.App
 import kotlinx.coroutines.flow.Flow
 
@@ -41,6 +44,48 @@ data class AutoRecord(
     var id:Int = 0
 }
 
+@Entity(tableName = "bill_table", indices = [Index(value = ["date"])])
+data class BaseBill(
+    /**
+     * 账单名称
+     */
+    val name:String,
+    /**
+     * 账单信息
+     */
+    val msg: String,
+    /**
+     * 账单种类
+     */
+    val type:String,
+    /**
+     * 账单金额
+     */
+    val amount:Int,
+    /**
+     * 账单日期
+     */
+    val date:Int,
+    /**
+     * 所属账本的id
+     */
+    val bookId:Int
+){
+    @PrimaryKey(autoGenerate = true)
+    var id:Int = 0
+}
+
+@Entity(tableName = "bill_book_table", indices = [Index(value = ["name"], unique = true)])
+data class BillBook(
+    /**
+     * 账本名字
+     */
+    val name: String
+){
+    @PrimaryKey(autoGenerate = true)
+    var id:Int=0
+}
+
 @Dao
 interface AutoRecordDao{
     @Insert
@@ -52,12 +97,48 @@ interface AutoRecordDao{
     @Query("select * from auto_record_table")
     fun queryAutoRecord():List<AutoRecord>
 }
+
+@Dao
+interface BillDao{
+    @Insert
+    fun insertBill(baseBill: BaseBill)
+
+    @Update
+    fun updateBill(baseBill: BaseBill)
+
+    @Delete
+    fun deleteBill(baseBill: BaseBill)
+
+    @Query("select * from bill_table where date>=:start and date<=:end and bookId=:bookId")
+    fun collectBillByDate(bookId: Int,start:Int,end:Int):Flow<List<BaseBill>>
+
+    @Query("select * from bill_table where date>=:start and date<=:end and bookId=:bookId")
+    fun queryBillByDate(bookId: Int,start:Int,end:Int):List<BaseBill>
+}
+
+@Dao
+interface BillBookDao{
+    @Insert
+    fun insertBillBook(billBook: BillBook)
+
+    @Update
+    fun updateBillBook(billBook: BillBook)
+
+    @Delete
+    fun deleteBillBook(billBook: BillBook)
+
+    @Query("select * from bill_book_table")
+    fun queryAllBillBook():List<BillBook>
+}
+
 @Database(
-    version = 1, entities = [AutoRecord::class], exportSchema = false
+    version = 1, entities = [AutoRecord::class,BaseBill::class,BillBook::class], exportSchema = false
 )
 abstract class AppDatabase:RoomDatabase(){
 
     abstract fun autoRecordDao():AutoRecordDao
+    abstract fun billDao():BillDao
+    abstract fun billBookDao():BillBookDao
 
     companion object{
 
