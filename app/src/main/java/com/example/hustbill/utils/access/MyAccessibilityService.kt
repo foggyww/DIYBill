@@ -6,7 +6,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import com.example.hustbill.db.AutoRecord
 import com.example.hustbill.db.AutoRecordHelper
 import com.example.hustbill.db.IOCallback
-import com.example.hustbill.ui.screen.home.stringList
+import com.example.hustbill.ui.screen.index.stringList
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

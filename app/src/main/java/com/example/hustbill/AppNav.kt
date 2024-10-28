@@ -11,7 +11,7 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
-import com.example.hustbill.ui.screen.home.View
+import com.example.hustbill.ui.screen.index.AppScaffold
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -26,7 +26,7 @@ fun AppNav(nav: NavHostController = rememberAnimatedNavController()) {
         animateCompose(
             AppRoute.MAIN,
         ) {
-            View()
+            AppScaffold()
         }
     }
 }
