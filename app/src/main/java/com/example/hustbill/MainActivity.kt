@@ -9,6 +9,7 @@ import androidx.core.view.WindowCompat
 import com.bingyan.focuscat.ui.widgets.background.MainBackground
 import com.example.hustbill.ui.provider.LocalPermissionProvider
 import com.example.hustbill.ui.theme.AppTheme
+import com.example.hustbill.utils.SP
 import com.example.hustbill.utils.permission.PermissionUtil
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 

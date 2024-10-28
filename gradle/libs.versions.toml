@@ -15,6 +15,7 @@ navigationRuntimeKtx = "2.8.2"
 accompanist = "0.31.2-alpha"
 roomKtx = "2.6.1"
 ksp = "1.9.0-1.0.13"
+mmkv="1.2.16"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,7 @@ navigation-animation = {group = "com.google.accompanist",name = "accompanist-nav
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-room-runtime= {group="androidx.room",name="room-runtime",version.ref="roomKtx"}
 androidx-room-compiler = {group="androidx.room", name ="room-compiler",version.ref="roomKtx"}
+tencent-mmkv = {group="com.tencent",name="mmkv",version.ref="mmkv"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
