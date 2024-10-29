@@ -3,8 +3,9 @@ package com.example.hustbill.ui.theme
 import androidx.compose.ui.unit.dp
 
 object Gap {
-    val Large = 32.dp//超大边距
+    val XLarge = 32.dp//超大边距
     val Zero = 0.dp//零边距
+    val Large = 24.dp
     val Big = 16.dp//大型边距
     val Mid = 8.dp//中型边距
     val Small = 4.dp//小型边距

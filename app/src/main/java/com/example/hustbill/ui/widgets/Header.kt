@@ -37,7 +37,6 @@ fun TextHeader(
 ){
     Row(modifier = modifier){
         Text(text, color = colors.textPrimary,
-            style = AppTypography.large,
-            fontWeight = FontWeight.W600)
+            style = AppTypography.bigTitle)
     }
 }

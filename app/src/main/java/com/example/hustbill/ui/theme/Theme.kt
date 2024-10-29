@@ -31,7 +31,7 @@ val LightColorPalette = AppColors(
     titleBar = white,
     divider = white3,
     textPrimary = black3,
-    textSecondary = grey1,
+    textSecondary = secondBlack,
     card = cardColor,
     lightCard = lightCardColor,
     onCard = white1,
@@ -81,7 +81,8 @@ data class AppColors(
     val border : Color = black, //正常的边框
     val lightBorder : Color = grey3, //浅灰色的边框
     val message: Color = Color.Gray,
-    val directoryBorder : Color = green1
+    val directoryBorder : Color = green1,
+    val shadow : Color = grey6,
 )
 
 val LocalColor = compositionLocalOf {
