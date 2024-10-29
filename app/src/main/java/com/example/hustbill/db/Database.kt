@@ -61,7 +61,7 @@ data class BaseBill(
     /**
      * 账单金额
      */
-    val amount:Int,
+    val amount:String,
     /**
      * 账单日期
      */
@@ -69,7 +69,11 @@ data class BaseBill(
     /**
      * 所属账本的id
      */
-    val bookId:Int
+    val bookId:Int,
+    /**
+     * 账单来源
+     */
+    val source:String,
 ){
     @PrimaryKey(autoGenerate = true)
     var id:Int = 0

@@ -9,8 +9,9 @@ data class Bill(
     val name: String,
     val msg: String,
     val type: BillType,
-    val amount: Int,
-    val date: Date
+    val amount: String,
+    val date: Date,
+    val source:String
 )
 
 object BillHelper {
