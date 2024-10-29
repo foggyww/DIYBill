@@ -24,7 +24,7 @@ val stringList =mutableStateListOf<String>()
 @Composable
 fun AppScaffold() {
     val state = rememberPagerState { 4 }
-    val horizonPadding = Gap.Large
+    val horizonPadding = Gap.Big*1.5f
     Scaffold(
         topBar = {
             TitleSpacer()

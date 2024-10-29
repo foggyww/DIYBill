@@ -20,8 +20,7 @@ fun MainBackground(
     content : @Composable ColumnScope.()->Unit
 ){
     Surface(modifier = Modifier.fillMaxSize()
-        .background(colors.background)
-        .click {}){
+        .background(colors.background)){
         Column(
             modifier = Modifier
                 .fillMaxSize()
