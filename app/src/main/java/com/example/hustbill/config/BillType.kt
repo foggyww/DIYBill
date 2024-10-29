@@ -1,7 +1,8 @@
 package com.example.hustbill.config
 
 enum class BillType(val cnName:String){
-    eating("吃饭")
+    Eating("吃饭"),
+    Cloth("衣物")
 }
 
 val String.toBillType:BillType?
