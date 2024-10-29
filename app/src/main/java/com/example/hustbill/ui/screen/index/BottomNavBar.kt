@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.NavigationBarItem
@@ -52,7 +53,7 @@ fun BottomNavBar(
     val width = remember {
         mutableIntStateOf(0)
     }
-    Box(modifier = Modifier.height(108.dp)){
+    Box(modifier = Modifier.height(64.dp)){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,7 +76,7 @@ fun BottomNavBar(
                     icon = {
                         EasyImage(
                             modifier = Modifier
-                                .size(ImageSize.Normal),
+                                .size(ImageSize.Mid+4.dp),
                             src = screen.icon,
                             contentDescription = screen.string,
                             tint = if(selected) colors.secondary else colors.unfocused,
@@ -89,16 +90,20 @@ fun BottomNavBar(
                 )
             }
         }
-        EasyImage(
-            modifier = Modifier.size(68.dp)
-                .align(Alignment.TopCenter)
-                .clip(RoundedShapes.large)
-                .shadow(Gap.Small,RoundedShapes.large)
-                .click {
+        Box(modifier = Modifier
+            .offset(0.dp,(-32).dp)
+            .align(Alignment.TopCenter)){
+            EasyImage(
+                modifier = Modifier.size(60.dp)
+                    .align(Alignment.TopCenter)
+                    .clip(RoundedShapes.large)
+                    .shadow(Gap.Small,RoundedShapes.large)
+                    .click {
 
-                }
-            , src = R.drawable.add,
-            contentDescription = "添加",
-            scale = ContentScale.Fit)
+                    }
+                , src = R.drawable.add,
+                contentDescription = "添加",
+                scale = ContentScale.Fit)
+        }
     }
 }

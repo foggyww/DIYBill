@@ -10,37 +10,37 @@ sealed class BottomNavRoute(
     @DrawableRes var iconSelected: Int = icon
 ) {
     data object Home : BottomNavRoute(
-        Route.Home,
+        NavRoute.Home,
         "主页",
         R.drawable.home,
     )
 
     data object Type :
         BottomNavRoute(
-            Route.Type,
+            NavRoute.Type,
             "分类",
             R.drawable.type,
         )
 
     data object Advices :
         BottomNavRoute(
-            Route.Advices,
+            NavRoute.Advices,
             "建议",
             R.drawable.advices,
         )
 
     data object Setting :
         BottomNavRoute(
-            Route.Setting,
+            NavRoute.Setting,
             "设置",
             R.drawable.setting
         )
 
     data object Add :
-        BottomNavRoute(Route.Add,"添加", R.drawable.add)
+        BottomNavRoute(NavRoute.Add,"添加", R.drawable.add)
 }
 
-private object Route {
+object NavRoute {
     const val Home = 0
     const val Type = 1
     const val Advices = 2
