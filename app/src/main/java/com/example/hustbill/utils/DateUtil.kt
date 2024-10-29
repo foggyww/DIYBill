@@ -46,11 +46,24 @@ val Date.toInt:Int
     get() =
         this.year*10000+this.month*100+this.day
 
+val String.toDate:Date
+    get() = Date(substring(0..3).toInt(),
+        substring(5..6).toInt(),
+        substring(8..9).toInt())
 
 data class DateRange(
     val start:Date,
     val end:Date
 )
+
+val DateRange.toString:String
+    get() =  "${start.year}年${start.month}月${start.day}日-${end.year}年${end.month}月${end.day}日"
+
+val String.toDateRange:DateRange
+    get() = DateRange(substring(0..10).toDate,substring(12,22).toDate)
+
+val Int.toDate:Date
+    get() = Date(this/10000,this/100%100,this%100)
 
 operator fun Date.plus(other:Int):Date{
     val calendar = Calendar.getInstance()
