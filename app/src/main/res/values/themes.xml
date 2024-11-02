@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.HustBill" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.HustBill" parent="android:Theme.Material.Light.NoActionBar" >
+        <item name="android:textSelectHandleLeft" >@drawable/none</item>
+        <item name="android:textSelectHandleRight" >@drawable/none</item>
+        <item name="android:textSelectHandle" >@drawable/none</item>
+        <item name="android:colorControlActivated">@color/pink</item>
+        <item name="android:colorPrimary">@color/pink</item>
+        <item name="android:colorSecondary">@color/pink</item>
+        <item name="android:fillColor">@color/pink</item>
+        <item name="android:color">@color/pink</item>
+        <item name="android:colorAccent">@color/pink</item>
+        <item name="android:colorPrimaryDark">@color/pink</item>
+        <item name="android:colorControlNormal">@color/pink</item>
+        <item name="android:colorControlHighlight">@color/pink</item>
+    </style>
 </resources>
