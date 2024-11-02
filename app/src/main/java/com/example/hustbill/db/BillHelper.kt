@@ -1,10 +1,11 @@
 package com.example.hustbill.db
 
-import com.example.hustbill.config.BillType
+import com.example.hustbill.config.OutlayType
 import com.example.hustbill.config.Config
-import com.example.hustbill.config.toBillType
+import com.example.hustbill.config.Type
+import com.example.hustbill.config.toIncomeType
+import com.example.hustbill.config.toOutlayType
 import com.example.hustbill.utils.Date
-import com.example.hustbill.utils.SP
 import com.example.hustbill.utils.toDate
 import com.example.hustbill.utils.toInt
 import kotlinx.coroutines.Dispatchers
@@ -14,11 +15,15 @@ import kotlinx.coroutines.withContext
 data class Bill(
     val name: String,
     val msg: String,
-    val type: BillType,
+    val type: Type,
     val amount: String,
     val date: Date,
-    val source:String
+    val source:String,
 )
+
+const val FROM_OHTER = 0
+const val FROM_WEIXIN = 1
+const val FROM_ALYPAY= 2
 
 object BillHelper {
 
@@ -36,7 +41,8 @@ object BillHelper {
                         bill.amount,
                         bill.date.toInt,
                         Config.bookId,
-                        bill.source
+                        bill.source,
+                        bill.type is OutlayType
                     )
                 )
                 ioCallback.onCompleted(Unit)
@@ -60,7 +66,8 @@ object BillHelper {
                         bill.amount,
                         bill.date.toInt,
                         Config.bookId,
-                        bill.source
+                        bill.source,
+                        bill.type is OutlayType
                     )
                 )
                 ioCallback.onCompleted(Unit)
@@ -84,7 +91,8 @@ object BillHelper {
                         bill.amount,
                         bill.date.toInt,
                         Config.bookId,
-                        bill.source
+                        bill.source,
+                        bill.type is OutlayType
                     )
                 )
                 ioCallback.onCompleted(Unit)
@@ -94,10 +102,10 @@ object BillHelper {
         }
     }
 
-    suspend fun collectBillList(ioCallback: IOCallback<MFlow<List<Bill>>>){
+    suspend fun collectOutlayList(ioCallback: IOCallback<MFlow<List<Bill>>>){
         withContext(Dispatchers.IO){
             try {
-                val flow = getAppDatabase().billDao().collectBillByDate(
+                val flow = getAppDatabase().billDao().collectOutlayByDate(
                     Config.bookId,
                     Config.monthRange.start.toInt,
                     Config.monthRange.end.toInt
@@ -108,10 +116,10 @@ object BillHelper {
                             Bill(
                                 bBill.name,
                                 bBill.msg,
-                                bBill.type.toBillType!!,
+                                if(bBill.isOutlay) bBill.type.toOutlayType!! else bBill.type.toIncomeType!!,
                                 bBill.amount,
                                 bBill.date.toDate,
-                                bBill.source
+                                bBill.source,
                             )
                         }
                     }
@@ -134,10 +142,10 @@ object BillHelper {
                     Bill(
                         it.name,
                         it.msg,
-                        it.type.toBillType!!,
+                        it.type.toOutlayType!!,
                         it.amount,
                         it.date.toDate,
-                        it.source
+                        it.source,
                     )
                 }
                 ioCallback.onCompleted(r)

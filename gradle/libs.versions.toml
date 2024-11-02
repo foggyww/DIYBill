@@ -18,6 +18,7 @@ ksp = "1.9.0-1.0.13"
 mmkv="1.2.16"
 mp_android="v3.1.0"
 shadow = "1.0.4"
+uiTestAndroid = "1.7.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +46,7 @@ androidx-room-compiler = {group="androidx.room", name ="room-compiler",version.r
 tencent-mmkv = {group="com.tencent",name="mmkv",version.ref="mmkv"}
 widge-mpAndroidChart = {group="com.github.PhilJay",name="MPAndroidChart",version.ref="mp_android"}
 widge-shadow = {group="com.github.GIGAMOLE",name="ComposeShadowsPlus",version.ref="shadow"}
+androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "uiTestAndroid" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

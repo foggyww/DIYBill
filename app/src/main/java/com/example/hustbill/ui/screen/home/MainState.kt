@@ -7,6 +7,7 @@ import com.example.hustbill.db.Bill
 import com.example.hustbill.utils.Date
 import com.example.hustbill.utils.getDate
 import com.example.hustbill.utils.plus
+import com.example.hustbill.utils.toDate
 import com.example.hustbill.utils.toInt
 
 @Immutable
@@ -59,3 +60,18 @@ data class DayBill(
     val date: Date,
     val billList: List<Bill>
 )
+
+val List<Bill>.toDayBillList : List<DayBill>
+    get() {
+        val map = mutableMapOf<Int,MutableList<Bill>>()
+        this.forEach {
+            map.getOrPut(it.date.toInt) {
+                mutableListOf()
+            }.add(it)
+        }
+        return map.map {
+            DayBill(it.key.toDate,it.value)
+        }.sortedBy {
+            it.date.toInt
+        }
+    }

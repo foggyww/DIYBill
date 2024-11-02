@@ -1,12 +1,11 @@
 package com.example.hustbill.ui.screen.home
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.example.hustbill.base.BaseViewModel
-import com.example.hustbill.config.BillType
-import com.example.hustbill.db.Bill
-import com.example.hustbill.db.getAppDatabase
-import com.example.hustbill.utils.Date
+import com.example.hustbill.db.BillHelper
+import com.example.hustbill.db.IOCallback
+import com.example.hustbill.ui.provider.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,39 +20,21 @@ class MainViewModel : BaseViewModel<MainState>() {
 
     val config = MainConfig()
 
-    fun init() {
+    fun init(context: Context) {
         viewModelScope.launch(Dispatchers.IO){
-            getAppDatabase().billBookDao().queryAllBillBook()
-        }
-
-        val r = _state.update {
-            it.copy(
-                billState = BillState(
-                    listOf(
-                        DayBill(
-                            Date(2024, 10, 29),
-                            listOf(
-                                Bill("老乡鸡", "饮食", BillType.Eating, "-40.20", Date(2024, 10, 29), "微信"),
-                                Bill("买卫衣", "买衣服", BillType.Cloth, "-380.60", Date(2024, 10, 29), "支付宝")
-                            )
-                        ),
-                        DayBill(
-                            Date(2024, 10, 28),
-                            listOf(
-                                Bill("老乡鸡", "饮食", BillType.Eating, "-140.99", Date(2024, 10, 29), "微信"),
-                                Bill("买卫衣", "买衣服", BillType.Cloth, "-580.00", Date(2024, 10, 29), "支付宝")
-                            )
-                        ),
-                        DayBill(
-                            Date(2024, 10, 26),
-                            listOf(
-                                Bill("老乡鸡", "饮食", BillType.Eating, "-30.00", Date(2024, 10, 29), "微信"),
-                                Bill("买卫衣", "买衣服", BillType.Cloth, "-180.00", Date(2024, 10, 29), "支付宝")
-                            )
-                        )
-                    )
-                )
-            )
+            BillHelper.collectOutlayList(IOCallback(
+                onCompleted = {
+                    it.onSuccess { list->
+                        _state.update { s->
+                            s.copy(billState = BillState(list.toDayBillList))
+                        }
+                    }
+                        .onError { t->
+                            context.toast("加载失败！"+t.message)
+                        }
+                        .execute()
+                }
+            ))
         }
     }
 

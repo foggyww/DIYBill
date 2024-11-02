@@ -74,6 +74,10 @@ data class BaseBill(
      * 账单来源
      */
     val source:String,
+    /**
+     * 是支出还是收入
+     */
+    val isOutlay:Boolean
 ){
     @PrimaryKey(autoGenerate = true)
     var id:Int = 0
@@ -115,6 +119,9 @@ interface BillDao{
 
     @Query("select * from bill_table where date>=:start and date<=:end and bookId=:bookId")
     fun collectBillByDate(bookId: Int,start:Int,end:Int):Flow<List<BaseBill>>
+
+    @Query("select * from bill_table where date>=:start and date<=:end and bookId=:bookId and isOutlay=1")
+    fun collectOutlayByDate(bookId: Int,start:Int,end:Int):Flow<List<BaseBill>>
 
     @Query("select * from bill_table where date>=:start and date<=:end and bookId=:bookId")
     fun queryBillByDate(bookId: Int,start:Int,end:Int):List<BaseBill>

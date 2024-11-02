@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -49,8 +50,9 @@ fun MainScreen(
     contentPadding:PaddingValues,
     vm:MainViewModel = viewModel()
 ){
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
-        vm.init()
+        vm.init(context)
     }
 
     val state by vm.state.collectAsState()
@@ -87,7 +89,7 @@ fun MonthCard(
     config: MainConfig,
 ){
     val budget = config.budge
-    val nowConsume = -billState.total
+    val nowConsume = billState.total
     TitleCard(
         modifier = Modifier.fillMaxWidth(),
         title = "本月数据分析",
