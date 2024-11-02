@@ -67,8 +67,8 @@ fun InputCard(
     content:@Composable RowScope.() -> Unit
 ){
     Row(modifier = Modifier
-        .clip(RoundedCornerShape(3.dp))
-        .border(0.5.dp, colors.lightBorder, RoundedCornerShape(3.dp))
+        .clip(CardShapes.small)
+        .border(0.5.dp, colors.lightBorder, CardShapes.small)
         .background(color)
         .then(modifier),
         verticalAlignment = Alignment.CenterVertically){
