@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
@@ -112,6 +113,7 @@ fun ShadowLayout(
     offsetY: Dp = 0.dp,
     alpha: Float = 0.2f,
     verticalArrangement:Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment:Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
@@ -133,7 +135,8 @@ fun ShadowLayout(
             )
             .then(modifier)
         ,
-        verticalArrangement = verticalArrangement
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment
     ){
         content()
     }

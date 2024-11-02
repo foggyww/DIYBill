@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.tencent.mmkv)
     implementation(libs.widge.mpAndroidChart)
+    implementation(libs.widge.shadow)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

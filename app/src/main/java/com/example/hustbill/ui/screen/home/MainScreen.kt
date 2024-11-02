@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,7 +46,7 @@ import com.example.hustbill.utils.toString
 
 @Composable
 fun MainScreen(
-    horizonPadding:Dp,
+    contentPadding:PaddingValues,
     vm:MainViewModel = viewModel()
 ){
     LaunchedEffect(Unit) {
@@ -56,7 +57,7 @@ fun MainScreen(
 
     Column(
         modifier = Modifier.fillMaxSize()
-            .padding(horizontal = horizonPadding)
+            .padding(contentPadding)
     ){
         TextHeader(modifier = Modifier.fillMaxWidth()
             .padding(vertical = Gap.Big),

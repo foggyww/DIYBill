@@ -10,6 +10,10 @@ import com.example.hustbill.utils.toString
 
 object Config {
 
+    const val NAME_MAX_LENGTH = 10
+
+    const val AMOUNT_MAX_LENGTH = 5
+
     var budget:Int = SP.getInt(SIGNAL.BUDGET,2000)
         set(value){
             SP.setInt(SIGNAL.BUDGET,value)

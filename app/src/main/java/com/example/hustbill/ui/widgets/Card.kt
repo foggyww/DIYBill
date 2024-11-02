@@ -1,13 +1,19 @@
 package com.example.hustbill.ui.widgets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.hustbill.ui.theme.AppTypography
@@ -20,7 +26,7 @@ fun CommonCard(
     modifier: Modifier,
     verticalPadding: Dp = Gap.Large,
     horizonPadding: Dp = Gap.Large,
-    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(Gap.Big,Alignment.Top),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ShadowLayout(
@@ -42,7 +48,7 @@ fun TitleCard(
     title: String,
     verticalPadding: Dp = Gap.Large,
     horizonPadding: Dp = Gap.Large,
-    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(Gap.Big,Alignment.Top),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     CommonCard(
@@ -50,6 +56,22 @@ fun TitleCard(
         verticalArrangement = verticalArrangement
     ) {
         Text(text = title, style = AppTypography.smallTitle)
+        content()
+    }
+}
+
+@Composable
+fun InputCard(
+    modifier: Modifier,
+    color:Color = colors.heavyBackground,
+    content:@Composable RowScope.() -> Unit
+){
+    Row(modifier = Modifier
+        .clip(RoundedCornerShape(3.dp))
+        .border(0.5.dp, colors.lightBorder, RoundedCornerShape(3.dp))
+        .background(color)
+        .then(modifier),
+        verticalAlignment = Alignment.CenterVertically){
         content()
     }
 }

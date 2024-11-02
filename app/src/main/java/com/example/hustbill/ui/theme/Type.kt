@@ -53,8 +53,9 @@ object AppTypography {
         fontFamily = family
     )
 
-    val smallMsgNumber: TextStyle = TextStyle(
-        fontSize = (baseFont-2).sp,
+    val inputMsg: TextStyle = TextStyle(
+        fontSize = (baseFont-3).sp,
+        fontWeight = FontWeight.W600,
         fontFamily = family
     )
 

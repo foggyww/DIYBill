@@ -7,6 +7,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.view.WindowCompat
 import com.bingyan.focuscat.ui.widgets.background.MainBackground
+import com.example.hustbill.ui.provider.LocalNav
 import com.example.hustbill.ui.provider.LocalPermissionProvider
 import com.example.hustbill.ui.theme.AppTheme
 import com.example.hustbill.utils.SP
@@ -19,10 +20,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            val nav = rememberAnimatedNavController()
             CompositionLocalProvider(
-                LocalPermissionProvider provides PermissionUtil(this)
+                LocalPermissionProvider provides PermissionUtil(this),
+                LocalNav provides nav
             ) {
-                val nav = rememberAnimatedNavController()
                 AppTheme {
                     MainBackground{
                         AppNav(nav)

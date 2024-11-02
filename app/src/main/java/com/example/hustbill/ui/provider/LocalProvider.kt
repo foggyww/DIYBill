@@ -3,6 +3,7 @@ package com.example.hustbill.ui.provider
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.navigation.NavHostController
 import com.example.hustbill.utils.permission.PermissionUtil
 
 inline fun <reified T> localProvider(): ProvidableCompositionLocal<T> {
@@ -18,3 +19,4 @@ inline fun <reified T> localStaticProvider(): ProvidableCompositionLocal<T> {
 }
 
 val LocalPermissionProvider = localProvider<PermissionUtil>()
+val LocalNav = localProvider<NavHostController>()
