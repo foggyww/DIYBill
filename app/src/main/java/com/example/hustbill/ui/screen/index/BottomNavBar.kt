@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -22,10 +21,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.hustbill.AppRoute
 import com.example.hustbill.R
-import com.example.hustbill.ui.theme.CardShapesTopHalf
+import com.example.hustbill.push
+import com.example.hustbill.ui.provider.LocalNav
 import com.example.hustbill.ui.theme.Gap
 import com.example.hustbill.ui.theme.ImageSize
 import com.example.hustbill.ui.theme.RoundedShapes
@@ -53,13 +53,14 @@ fun BottomNavBar(
     val width = remember {
         mutableIntStateOf(0)
     }
+    val nav = LocalNav.current
     Box(modifier = Modifier.height(64.dp)){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(72.dp)
                 .align(Alignment.BottomCenter)
-                .border(0.3.dp, colors.heavyBackground)
+                .border(0.3.dp, colors.geryBackground)
                 .shadow(Gap.Mid)
                 .background(colors.background)
                 .onGloballyPositioned {
@@ -84,7 +85,7 @@ fun BottomNavBar(
                     },
                     onClick = {
                         scope.launch {
-                            page.animateScrollToPage(screen.routeNumber)
+                            page.scrollToPage(screen.routeNumber)
                         }
                     }
                 )
@@ -99,9 +100,11 @@ fun BottomNavBar(
                     .clip(RoundedShapes.large)
                     .shadow(Gap.Small,RoundedShapes.large)
                     .click {
-
+                        scope.launch {
+                            nav.navigate(AppRoute.ADD)
+                        }
                     }
-                , src = R.drawable.add,
+                , src = if(page.currentPage!=-1) R.drawable.add_yellow else R.drawable.add_pink,
                 contentDescription = "添加",
                 scale = ContentScale.Fit)
         }

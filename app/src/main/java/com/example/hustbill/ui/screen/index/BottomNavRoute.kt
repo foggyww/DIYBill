@@ -37,7 +37,7 @@ sealed class BottomNavRoute(
         )
 
     data object Add :
-        BottomNavRoute(NavRoute.Add,"添加", R.drawable.add)
+        BottomNavRoute(NavRoute.Add,"添加", R.drawable.add_yellow)
 }
 
 object NavRoute {

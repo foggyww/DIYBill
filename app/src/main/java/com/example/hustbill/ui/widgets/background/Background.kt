@@ -10,9 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.hustbill.ui.theme.Gap
 import com.example.hustbill.ui.theme.colors
-import com.example.hustbill.utils.click
 
 @Composable
 fun MainBackground(
@@ -41,7 +39,7 @@ fun SettingBackground(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = colors.heavyBackground
+                color = colors.geryBackground
             )
             .padding(padding)
     ) {
