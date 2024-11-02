@@ -136,7 +136,7 @@ interface BillBookDao{
 }
 
 @Database(
-    version = 1, entities = [AutoRecord::class,BaseBill::class,BillBook::class], exportSchema = false
+    version = 1, entities = [AutoRecord::class,BaseBill::class,BillBook::class],
 )
 abstract class AppDatabase:RoomDatabase(){
 

@@ -17,7 +17,6 @@ import com.example.hustbill.ui.screen.setting.SettingScreen
 import com.example.hustbill.ui.theme.colors
 import com.example.hustbill.ui.widgets.TitleSpacer
 
-val stringList =mutableStateListOf<String>()
 
 @SuppressLint("SuspiciousIndentation")
 @Composable

@@ -8,5 +8,5 @@
     android:canRetrieveWindowContent="true"
     android:description="@string/service_name"
     android:notificationTimeout="100"
-    android:packageNames="com.tencent.mm"
+    android:packageNames="com.tencent.mm,com.eg.android.AlipayGphone"
     />

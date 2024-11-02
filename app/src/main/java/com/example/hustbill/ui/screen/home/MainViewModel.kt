@@ -1,14 +1,18 @@
 package com.example.hustbill.ui.screen.home
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.hustbill.base.BaseViewModel
 import com.example.hustbill.config.BillType
 import com.example.hustbill.db.Bill
+import com.example.hustbill.db.getAppDatabase
 import com.example.hustbill.utils.Date
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class MainViewModel : BaseViewModel<MainState>() {
     override val _state: MutableStateFlow<MainState> = MutableStateFlow(MainState())
@@ -18,6 +22,10 @@ class MainViewModel : BaseViewModel<MainState>() {
     val config = MainConfig()
 
     fun init() {
+        viewModelScope.launch(Dispatchers.IO){
+            getAppDatabase().billBookDao().queryAllBillBook()
+        }
+
         val r = _state.update {
             it.copy(
                 billState = BillState(

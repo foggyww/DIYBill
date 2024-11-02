@@ -6,7 +6,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import com.example.hustbill.db.AutoRecord
 import com.example.hustbill.db.AutoRecordHelper
 import com.example.hustbill.db.IOCallback
-import com.example.hustbill.ui.screen.index.stringList
+import com.example.hustbill.ui.screen.setting.stringList
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -18,17 +18,21 @@ class MyAccessibilityService : AccessibilityService() {
     private fun getTextFromNode(nodeInfo: AccessibilityNodeInfo?): String {
         nodeInfo?.let {
             if (nodeInfo.childCount == 0) {
+                val res = StringBuilder()
+
                 if (it.text != null) {
-                    return it.text.toString()
-                } else {
-                    return ""
+                    res.append(it.text.toString()).append("\n")
                 }
+                if(it.contentDescription!=null){
+                    res.append(it.contentDescription.toString()).append("\n")
+                }
+                return res.toString()
             } else {
                 val builder = StringBuilder()
                 for (i in 0..<nodeInfo.childCount) {
                     val cT = getTextFromNode(it.getChild(i))
                     if (cT.isNotEmpty()) {
-                        builder.append(cT).append("\n")
+                        builder.append(cT)
                     }
                 }
                 return builder.toString()
@@ -38,7 +42,7 @@ class MyAccessibilityService : AccessibilityService() {
         }
     }
 
-    private var oldString = ""
+    private val oldWindowIdList = mutableListOf(-1,-1)
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         event?.apply {
@@ -49,19 +53,35 @@ class MyAccessibilityService : AccessibilityService() {
             if (className.toString() == "com.tencent.mm.framework.app.UIPageFragmentActivity" && packageName.toString() == "com.tencent.mm") {
                 source?.let {
                     if (checkWX(it)) {
-                        val content = getTextFromNode(it)
-                        if (content != oldString) {
-                            oldString = content
-                        } else {
+                        if (windowId==oldWindowIdList[0]) {
                             return
                         }
                         try {
-                            resolveContent(
+                            resolveWeiXinContent(
                                 packageName.toString(),
                                 className?.toString() ?: "null",
                                 windowId,
                                 getTextFromNode(it)
                             )
+                            oldWindowIdList[0] = windowId
+                        }catch (_:Throwable){}
+                    }
+                }
+            }
+            if(className.toString()=="com.alipay.android.msp.ui.views.MspContainerActivity"&& packageName.toString() =="com.eg.android.AlipayGphone"){
+                event.source?.let {
+                    if (checkAL(it)) {
+                        if (windowId==oldWindowIdList[1]) {
+                            return
+                        }
+                        try {
+                            resolveAlipayContent(
+                                packageName.toString(),
+                                className?.toString() ?: "null",
+                                windowId,
+                                getTextFromNode(it)
+                            )
+                            oldWindowIdList[1] = windowId
                         }catch (_:Throwable){}
                     }
                 }
@@ -70,21 +90,38 @@ class MyAccessibilityService : AccessibilityService() {
     }
 
     private fun checkWX(root: AccessibilityNodeInfo): Boolean {
+        return true
+//        if (root.className == "android.widget.Button" &&
+//            root.viewIdResourceName == "com.tencent.mm:id/kinda_button_impl_wrapper"
+//        ) {
+//            return true
+//        } else {
+//            for (i in 0..<root.childCount) {
+//                if (checkWX(root.getChild(i))) {
+//                    return true
+//                }
+//            }
+//            return false
+//        }
+    }
+
+    private fun checkAL(root: AccessibilityNodeInfo): Boolean {
         if (root.className == "android.widget.Button" &&
             root.viewIdResourceName == "com.tencent.mm:id/kinda_button_impl_wrapper"
         ) {
             return true
         } else {
             for (i in 0..<root.childCount) {
-                if (checkWX(root.getChild(i))) {
+                if (checkAL(root.getChild(i))) {
                     return true
                 }
             }
-            return false
         }
+        return true
     }
 
-    private fun resolveContent(
+
+    private fun resolveWeiXinContent(
         packetName: String,
         className: String,
         windowId: Int,
@@ -95,6 +132,37 @@ class MyAccessibilityService : AccessibilityService() {
             try {
                 if (list[i].contains('￥')) {
                     val msg = list[i - 1]
+                    Regex("\\d+\\.\\d+").find(list[i])?.value?.let { amount ->
+                        GlobalScope.launch(Dispatchers.IO){
+                            AutoRecordHelper.insertAutoRecord(
+                                AutoRecord(msg, amount, packetName, className, windowId),
+                                IOCallback()
+                            )
+                        }
+                    }
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+            }
+        }
+    }
+
+    private fun resolveAlipayContent(
+        packetName: String,
+        className: String,
+        windowId: Int,
+        string: String,
+    ) {
+        val list = string.split("\n")
+        for (i in list.indices) {
+            try {
+                if (list[i].contains('￥')) {
+                    val index = list[i].indexOf('￥')
+                    val msg = if (index != -1) {
+                        list[i].substring(0, index)
+                    } else {
+                        "未找到 '￥' 符号"
+                    }
                     Regex("\\d+\\.\\d+").find(list[i])?.value?.let { amount ->
                         GlobalScope.launch(Dispatchers.IO){
                             AutoRecordHelper.insertAutoRecord(
