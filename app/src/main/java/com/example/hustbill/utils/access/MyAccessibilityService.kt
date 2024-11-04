@@ -43,17 +43,16 @@ class MyAccessibilityService : AccessibilityService() {
     }
 
     private val oldWindowIdList = mutableListOf(-1,-1)
+    private val oldStringList = mutableListOf("","")
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         event?.apply {
-            stringList.add(windowId.toString())
-            stringList.add(packageName.toString())
-            stringList.add(className.toString())
             //支持微信的
             if (className.toString() == "com.tencent.mm.framework.app.UIPageFragmentActivity" && packageName.toString() == "com.tencent.mm") {
                 source?.let {
+                    val text = getTextFromNode(it)
                     if (checkWX(it)) {
-                        if (windowId==oldWindowIdList[0]) {
+                        if(oldStringList[0]==text&&windowId==oldWindowIdList[0]){
                             return
                         }
                         try {
@@ -61,9 +60,10 @@ class MyAccessibilityService : AccessibilityService() {
                                 packageName.toString(),
                                 className?.toString() ?: "null",
                                 windowId,
-                                getTextFromNode(it)
+                                text
                             )
                             oldWindowIdList[0] = windowId
+                            oldStringList[0] = text
                         }catch (_:Throwable){}
                     }
                 }
@@ -71,7 +71,8 @@ class MyAccessibilityService : AccessibilityService() {
             if(className.toString()=="com.alipay.android.msp.ui.views.MspContainerActivity"&& packageName.toString() =="com.eg.android.AlipayGphone"){
                 event.source?.let {
                     if (checkAL(it)) {
-                        if (windowId==oldWindowIdList[1]) {
+                        val text = getTextFromNode(it)
+                        if (text==oldStringList[1]&&windowId==oldWindowIdList[1]) {
                             return
                         }
                         try {
@@ -79,9 +80,10 @@ class MyAccessibilityService : AccessibilityService() {
                                 packageName.toString(),
                                 className?.toString() ?: "null",
                                 windowId,
-                                getTextFromNode(it)
+                                text
                             )
                             oldWindowIdList[1] = windowId
+                            oldStringList[1] = text
                         }catch (_:Throwable){}
                     }
                 }

@@ -41,8 +41,6 @@ fun AppScaffold(
         ) { page->
             when(page){
                 0 -> MainScreen(contentPadding)
-                1 -> MainScreen(contentPadding)
-                2 -> MainScreen(contentPadding)
                 3 -> SettingScreen(contentPadding)
             }
         }
