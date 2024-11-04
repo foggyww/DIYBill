@@ -5,13 +5,13 @@ import kotlinx.coroutines.withContext
 
 object AutoRecordHelper{
 
-    suspend fun insertAutoRecord(autoRecord: AutoRecord,ioCallback: IOCallback<Unit>){
+    suspend fun insertAutoRecord(autoRecord: AutoRecord,ioCallback: IOCallback<AutoRecord>){
         withContext(Dispatchers.IO){
             try {
                 getAppDatabase().autoRecordDao().insertAutoRecord(
                     autoRecord
                 )
-                ioCallback.onCompleted(Unit)
+                ioCallback.onCompleted(autoRecord)
             }catch (t:Throwable){
                 ioCallback.onErrorHandler(t)
             }
@@ -25,6 +25,19 @@ object AutoRecordHelper{
                     getAppDatabase().autoRecordDao().queryAutoRecord()
                 )
             }catch(t:Throwable){
+                ioCallback.onErrorHandler(t)
+            }
+        }
+    }
+
+    suspend fun deleteAutoRecord(autoRecord: AutoRecord,ioCallback: IOCallback<Unit>){
+        withContext(Dispatchers.IO){
+            try {
+                getAppDatabase().autoRecordDao().deleteAutoRecord(
+                    autoRecord
+                )
+                ioCallback.onCompleted(Unit)
+            }catch (t:Throwable){
                 ioCallback.onErrorHandler(t)
             }
         }

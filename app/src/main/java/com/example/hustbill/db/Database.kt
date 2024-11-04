@@ -38,7 +38,7 @@ data class AutoRecord(
     /**
      * 窗口ID
      */
-    val windowId:Int
+    val windowId:Int,
 ){
     @PrimaryKey(autoGenerate = true)
     var id:Int = 0
@@ -98,6 +98,9 @@ data class BillBook(
 interface AutoRecordDao{
     @Insert
     fun insertAutoRecord(autoRecord: AutoRecord)
+
+    @Delete
+    fun deleteAutoRecord(autoRecord: AutoRecord)
 
     @Query("select * from auto_record_table")
     fun collectAutoRecord():Flow<List<AutoRecord>>
