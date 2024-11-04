@@ -55,6 +55,7 @@ import com.example.hustbill.ui.widgets.EasyImage
 import com.example.hustbill.ui.widgets.FillButton
 import com.example.hustbill.ui.widgets.InputCard
 import com.example.hustbill.ui.widgets.PlainTextField
+import com.example.hustbill.ui.widgets.SelectType
 import com.example.hustbill.ui.widgets.ShadowLayout
 import com.example.hustbill.ui.widgets.TextHeader
 import com.example.hustbill.ui.widgets.TitleSpacer
@@ -327,7 +328,6 @@ private fun ItemSelect(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ItemType(
     text: String,
@@ -345,31 +345,13 @@ private fun ItemType(
             modifier = Modifier.padding(vertical = Gap.Small)
         )
         Spacer(modifier = Modifier.width(Gap.Big))
-
-        @Composable
-        fun CardItem(text: String, select: Boolean, onClick: (String) -> Unit) {
-            Box(modifier = Modifier
-                .height(28.dp)
-                .clip(CardShapes.medium)
-                .click {
-                    onClick.invoke(text)
-                }
-                .background(if (select) colors.secondary else colors.unfocused)
-                .padding(vertical = Gap.Small, horizontal = Gap.Mid)) {
-                Text(text, style = AppTypography.smallMsg, color = colors.background)
-            }
-        }
-
-        FlowRow(
-            verticalArrangement = Arrangement.spacedBy(Gap.Mid, Alignment.Top),
-            horizontalArrangement = Arrangement.spacedBy(Gap.Big, Alignment.Start)
-        ) {
-            list.forEach {
-                CardItem(it, type == it, onClick)
-            }
-        }
+        SelectType(
+            list, listOf(type), onClick
+        )
     }
 }
+
+
 
 private fun checkValues(
     name:String,
