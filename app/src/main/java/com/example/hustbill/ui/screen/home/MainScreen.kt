@@ -52,7 +52,10 @@ fun MainScreen(
 ){
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        vm.init(context)
+        vm.init()
+    }
+    LaunchedEffect(Unit) {
+        vm.uploadAutoRecord()
     }
 
     val state by vm.state.collectAsState()
