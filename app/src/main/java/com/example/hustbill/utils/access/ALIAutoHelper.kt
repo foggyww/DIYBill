@@ -7,59 +7,43 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ALIAutoHelper:AutoHelper {
-    companion object{
+class ALIAutoHelper : AutoHelper(PACKET_NAME, CLASS_NAME) {
+    companion object {
         private const val PACKET_NAME = "com.eg.android.AlipayGphone"
         private const val CLASS_NAME = "com.alipay.android.msp.ui.views.MspContainerActivity"
     }
 
-    override fun isTargetScreen(className: String, packetName: String): Boolean {
-        return className == CLASS_NAME && packetName== PACKET_NAME
-    }
 
     override fun checkTarget(root: AccessibilityNodeInfo): Boolean {
-        return true
-    }
-
-    private var oldContent:String = ""
-    private var oldWindowId:Int = -1
-
-    override fun checkRepeat(content: String, windowId: Int):Boolean {
-        return content!=oldContent || oldWindowId!=windowId
+        return false
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    override fun resolveContent(
+    override suspend fun resolveContent(
         packetName: String,
         className: String,
         windowId: Int,
         content: String,
+        onSuccess: () -> Unit,
     ) {
         val list = content.split("\n")
         for (i in list.indices) {
-            try {
-                if (list[i].contains('￥')) {
-                    val index = list[i].indexOf('￥')
-                    val msg = if (index != -1) {
-                        list[i].substring(0, index)
-                    } else {
-                        "未找到 '￥' 符号"
-                    }
-                    Regex("\\d+\\.\\d+").find(list[i])?.value?.let { amount ->
-                        GlobalScope.launch(Dispatchers.IO){
-                            insertBill(
-                                AutoRecord(msg, amount, packetName, className, windowId),
-                                "支付宝",
-                                onSuccess = {
-                                    oldContent = content
-                                    oldWindowId = windowId
-                                }
-                            )
-                        }
-                    }
+            if (list[i].contains('￥')) {
+                val index = list[i].indexOf('￥')
+                val msg = if (index != -1) {
+                    list[i].substring(0, index)
+                } else {
+                    "未找到 '￥' 符号"
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
+                Regex("\\d+\\.\\d+").find(list[i])?.value?.let { amount ->
+                    insertBill(
+                        AutoRecord(msg, amount, packetName, className, windowId),
+                        "支付宝",
+                        onSuccess = {
+                            onSuccess()
+                        }
+                    )
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,9 +9,9 @@
 
 
     <androidx.cardview.widget.CardView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:cardCornerRadius="65dp">
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:cardCornerRadius="100dp">
 
 
         <FrameLayout
@@ -22,11 +23,13 @@
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12.sp"
+                    android:textSize="10.sp"
+                    android:text="记账成功"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:layout_marginTop="1dp"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    tools:ignore="HardcodedText" />
             </FrameLayout>
 
 
