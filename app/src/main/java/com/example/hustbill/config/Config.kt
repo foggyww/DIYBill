@@ -26,6 +26,13 @@ object Config {
             field = value
         }
 
+
+    var openOver:Boolean = SP.getBoolean(SIGNAL.OPEN_OVER,false)
+        set(value) {
+            SP.setBoolean(SIGNAL.OPEN_OVER,value)
+            field = value
+        }
+
     var monthRange:DateRange = SP.get(SIGNAL.MONTH_RANGE)?.toDateRange
         ?:getDate().getRange(DateLevel.MONTH)
         set(value) {
@@ -37,5 +44,7 @@ object Config {
         const val BUDGET = "budget"
         const val BOOK_ID = "book_id"
         const val MONTH_RANGE = "month_range"
+        const val OPEN_AUTO = "start_auto"
+        const val OPEN_OVER = "open_over"
     }
 }

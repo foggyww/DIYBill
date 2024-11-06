@@ -63,7 +63,7 @@ fun TitleCard(
 @Composable
 fun InputCard(
     modifier: Modifier,
-    color:Color = colors.heavyBackground,
+    color:Color = colors.unfocusedSecondary,
     content:@Composable RowScope.() -> Unit
 ){
     Row(modifier = Modifier

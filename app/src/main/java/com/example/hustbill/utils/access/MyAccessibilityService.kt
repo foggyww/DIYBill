@@ -52,8 +52,6 @@ class MyAccessibilityService : AccessibilityService() {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-
-        if (!Config.openAuto) return
         event?.apply {
             source?.let { r ->
                 val root = rootInActiveWindow
@@ -71,10 +69,12 @@ class MyAccessibilityService : AccessibilityService() {
                         //去重
                         if (it.checkRepeat(content)) {
                             it.startResolve(packetName, className, windowId, content) {
-                                showFloatingWindow("记账完成")
-                                GlobalScope.launch(Dispatchers.IO) {
-                                    delay(5000)
-                                    missFloatingWindow()
+                                if(Config.openOver) {
+                                    showFloatingWindow("记账完成")
+                                    GlobalScope.launch(Dispatchers.IO) {
+                                        delay(5000)
+                                        missFloatingWindow()
+                                    }
                                 }
                             }
                         }

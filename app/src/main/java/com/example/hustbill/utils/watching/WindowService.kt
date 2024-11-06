@@ -42,36 +42,37 @@ class WindowService: LifecycleService(){
 
     // 获取悬浮窗布局
     private var viewBinding: LayoutFloatingImageBinding? = null
-    private var windowManager: WindowManager? = null
     private val layoutParams = LayoutParams()
 
     @SuppressLint("ClickableViewAccessibility", "InflateParams")
     private fun showFloatingWindow() {
         viewBinding = LayoutFloatingImageBinding.inflate(LayoutInflater.from(this))
         //获取WindowManager服务
-        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
         //设置LayoutParam
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            layoutParams.type = LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            layoutParams.type = LayoutParams.TYPE_PHONE
-        }
+        layoutParams.type = LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
         layoutParams.format = PixelFormat.RGBA_8888
         layoutParams.gravity = Gravity.START or Gravity.TOP
         layoutParams.flags =
-            LayoutParams.FLAG_NOT_TOUCH_MODAL or LayoutParams.FLAG_NOT_FOCUSABLE
+            LayoutParams.FLAG_NOT_TOUCHABLE or LayoutParams.FLAG_NOT_FOCUSABLE
         layoutParams.width = LayoutParams.WRAP_CONTENT
         layoutParams.height = LayoutParams.WRAP_CONTENT
-        layoutParams.x = 0
-        layoutParams.y = 0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            layoutParams.x =windowManager.currentWindowMetrics.bounds.width()
+            layoutParams.y =windowManager.currentWindowMetrics.bounds.width()/2
+        }else{
+            layoutParams.x = windowManager.defaultDisplay.width
+            layoutParams.y = windowManager.defaultDisplay.height/2
+        }
 
         //将悬浮窗控件添加到WindowManager
-        windowManager?.addView(viewBinding?.root,layoutParams)
+        windowManager.addView(viewBinding?.root,layoutParams)
     }
 
     private fun removeFloatingWindow(){
-        windowManager?.removeView(viewBinding?.root)
+        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        windowManager.removeView(viewBinding?.root)
     }
 
     override fun onUnbind(intent: Intent?): Boolean {

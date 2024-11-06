@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.example.hustbill.App
 import com.example.hustbill.MainActivity
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
@@ -28,29 +29,27 @@ import kotlin.properties.Delegates
 
 
 enum class AppPermission {
-    NotificationPermission,
     UsagePermission,
     OverlaysPermission,
     AccessibilityPermission
 }
 
-class PermissionUtil(val mainActivity: ComponentActivity) {
-    private val appPermissions: MutableMap<AppPermission, Boolean> = SnapshotStateMap()
+class PermissionUtil(private val mainActivity: ComponentActivity) {
+    private val appPermissions: MutableMap<AppPermission, Boolean> = mutableMapOf()
 
     init {
         getAllPermission()
     }
 
-    fun getAllPermission() {
-        appPermissions[AppPermission.NotificationPermission] = checkNotificationPermission()
+    private fun getAllPermission() {
         appPermissions[AppPermission.OverlaysPermission] = checkOverlaysPermission()
         appPermissions[AppPermission.UsagePermission] = checkUsagePermission()
         appPermissions[AppPermission.AccessibilityPermission] = checkAccessibilityPermission()
     }
 
-
-    private fun checkNotificationPermission(): Boolean {
-        return NotificationManagerCompat.from(mainActivity).areNotificationsEnabled()
+    fun getPermissions():Map<AppPermission,Boolean>{
+        getAllPermission()
+        return appPermissions.toMap()
     }
 
     private fun checkUsagePermission(): Boolean {
@@ -90,51 +89,6 @@ class PermissionUtil(val mainActivity: ComponentActivity) {
         mainActivity.startActivity(intent)
     }
 
-    private fun initCheckAllPermission(): Boolean {
-        return checkOverlaysPermission() && checkUsagePermission() && checkNotificationPermission()
-    }
-
-    fun requestNotifyPermission(
-        enableManualRequest: Boolean = true, //是否启用手动申请
-    ) {
-        //手动申请通知权限
-        fun requestNotifyPermissionBySelf() {
-            val applicationInfo = mainActivity.applicationInfo
-            try {
-                val intent = Intent()
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
-                intent.putExtra("app_package", applicationInfo.packageName)
-                intent.putExtra("android.provider.extra.APP_PACKAGE", applicationInfo.packageName)
-                intent.putExtra("app_uid", applicationInfo.uid)
-                mainActivity.startActivity(intent)
-            } catch (e: Exception) {
-                val intent = Intent()
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
-                intent.data = Uri.fromParts("package", applicationInfo.packageName, null)
-                mainActivity.startActivity(intent)
-            }
-        }
-
-        if (appPermissions[AppPermission.NotificationPermission]!! && enableManualRequest) {
-            requestNotifyPermissionBySelf()
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            mainActivity.requestPermission(
-                android.Manifest.permission.POST_NOTIFICATIONS,
-                {},
-                {
-                    if (it && enableManualRequest) {
-                        requestNotifyPermissionBySelf()
-                    }
-                }
-            )
-        } else {
-            requestNotifyPermissionBySelf()
-        }
-    }
-
     fun requestUsagePermission() {
         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
         intent.data = Uri.parse("package:${mainActivity.packageName}")
@@ -158,48 +112,4 @@ class PermissionUtil(val mainActivity: ComponentActivity) {
             activity.join()
         }
     }
-}
-
-data class AppInfo @JvmOverloads constructor(
-    val appName: String,
-    val packageName: String,
-    val appIcon: Drawable? = null,
-    val time: Long,
-)
-
-
-private val nextLocalRequestCode = AtomicInteger()
-private val nextKey: String
-    get() = "activity_rq#${nextLocalRequestCode.getAndIncrement()}"
-
-private fun ComponentActivity.requestPermission(
-    permission: String,
-    onPermit: () -> Unit,
-    onDeny: (shouldShowCustomRequest: Boolean) -> Unit,
-) {
-    if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
-        onPermit()
-        return
-    }
-    var launcher by Delegates.notNull<ActivityResultLauncher<String>>()
-    launcher = activityResultRegistry.register(
-        nextKey,
-        ActivityResultContracts.RequestPermission()
-    ) { result ->
-        if (result) {
-            onPermit()
-        } else {
-            onDeny(!ActivityCompat.shouldShowRequestPermissionRationale(this, permission))
-        }
-        launcher.unregister()
-    }
-    lifecycle.addObserver(object : LifecycleEventObserver {
-        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-            if (event == Lifecycle.Event.ON_DESTROY) {
-                launcher.unregister()
-                lifecycle.removeObserver(this)
-            }
-        }
-    })
-    launcher.launch(permission)
 }
