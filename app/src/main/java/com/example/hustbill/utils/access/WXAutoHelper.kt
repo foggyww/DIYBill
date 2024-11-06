@@ -1,19 +1,14 @@
 package com.example.hustbill.utils.access
 
-import android.util.Log
 import android.view.accessibility.AccessibilityNodeInfo
 import com.example.hustbill.db.AutoRecord
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
 
-class WXAutoHelper : AutoHelper(PACKET_NAME, CLASS_NAME) {
+class WXAutoHelper : AutoHelper(PACKET_NAME, listOf(CLASS_NAME1, CLASS_NAME2)) {
 
     companion object {
         private const val PACKET_NAME = "com.tencent.mm"
-        private const val CLASS_NAME = "com.tencent.mm.framework.app.UIPageFragmentActivity"
+        private const val CLASS_NAME1 = "com.tencent.mm.framework.app.UIPageFragmentActivity"
+        private const val CLASS_NAME2 = "com.tencent.mm.plugin.scanner.ui.BaseScanUI"
     }
 
     override fun checkTarget(root: AccessibilityNodeInfo): Boolean {

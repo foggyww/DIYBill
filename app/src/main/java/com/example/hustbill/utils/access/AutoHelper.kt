@@ -16,45 +16,43 @@ import kotlinx.coroutines.sync.Mutex
 
 abstract class AutoHelper(
     private val packetName: String,
-    private val className: String,
+    private val classNames: List<String>,
 ) {
 
-    private val mutex = Mutex()
     suspend fun insertBill(autoRecord: AutoRecord, source: String, onSuccess: () -> Unit) {
-            BillHelper.insertBill(
-                Bill(
-                    autoRecord.msg,
-                    "",
-                    OutlayType.Other,
-                    autoRecord.amount,
-                    getDate(),
-                    source
-                ),
-                IOCallback(
-                    onErrorHandler = {
-                        AutoRecordHelper.insertAutoRecord(
-                            autoRecord,
-                            IOCallback(
-                                onSuccess = { onSuccess() }
-                            )
+        BillHelper.insertBill(
+            Bill(
+                -1,
+                autoRecord.msg,
+                "",
+                OutlayType.Other,
+                autoRecord.amount,
+                getDate(),
+                source
+            ),
+            IOCallback(
+                onErrorHandler = {
+                    AutoRecordHelper.insertAutoRecord(
+                        autoRecord,
+                        IOCallback(
+                            onSuccess = { onSuccess() }
                         )
-                    },
-                    onSuccess = { onSuccess() }
-                )
+                    )
+                },
+                onSuccess = { onSuccess() }
             )
+        )
     }
 
     private var oldContent = ""
     fun tryStartWatch(className: String, packetName: String) {
-        if (this.isWatching) {
-            //离开监视
-            if (className.startsWith("com.tencent.mm")) {
+
+        if (this.classNames.contains(className) && packetName == this.packetName) {
+            this.isWatching = true
+        } else if(className.startsWith(packetName)){
+            if(isWatching){
                 this.isWatching = false
                 oldContent = ""
-            }
-        } else {
-            if (className == this.className && packetName == this.packetName) {
-                this.isWatching = true
             }
         }
     }
@@ -64,7 +62,7 @@ abstract class AutoHelper(
 
     abstract fun checkTarget(root: AccessibilityNodeInfo): Boolean
 
-    fun checkRepeat(content: String): Boolean {
+    private fun checkRepeat(content: String): Boolean {
         return oldContent != content
     }
 
@@ -76,7 +74,8 @@ abstract class AutoHelper(
         onSuccess: () -> Unit,
     )
 
-    private var isRunning = false
+    private val mutex = Mutex()
+
     @OptIn(DelicateCoroutinesApi::class)
     fun startResolve(
         packetName: String,
@@ -85,19 +84,19 @@ abstract class AutoHelper(
         content: String,
         onSuccess: () -> Unit,
     ) {
-        if(!isRunning){
-            isRunning = true
-            GlobalScope.launch(Dispatchers.IO){
-                try {
+        GlobalScope.launch(Dispatchers.IO) {
+            mutex.lock()
+            try {
+                if(checkRepeat(content)) {
                     resolveContent(packetName, className, windowId, content) {
                         onSuccess()
                         oldContent = content
                     }
-                }catch (t:Throwable){
-                    t.printStackTrace()
-                }finally {
-                    isRunning = false
                 }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+            } finally {
+                mutex.unlock()
             }
         }
     }

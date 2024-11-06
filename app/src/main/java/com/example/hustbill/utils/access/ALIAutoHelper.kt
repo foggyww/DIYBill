@@ -3,14 +3,11 @@ package com.example.hustbill.utils.access
 import android.view.accessibility.AccessibilityNodeInfo
 import com.example.hustbill.db.AutoRecord
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
-class ALIAutoHelper : AutoHelper(PACKET_NAME, CLASS_NAME) {
+class ALIAutoHelper : AutoHelper(PACKET_NAME, listOf(CLASS_NAME1)) {
     companion object {
         private const val PACKET_NAME = "com.eg.android.AlipayGphone"
-        private const val CLASS_NAME = "com.alipay.android.msp.ui.views.MspContainerActivity"
+        private const val CLASS_NAME1 = "com.alipay.android.msp.ui.views.MspContainerActivity"
     }
 
 

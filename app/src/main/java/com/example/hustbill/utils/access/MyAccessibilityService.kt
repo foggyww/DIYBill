@@ -58,7 +58,7 @@ class MyAccessibilityService : AccessibilityService() {
                 autoHelpers.forEach {
                     val packetName = packageName.toString()
                     val className = className.toString()
-                    if (className.startsWith("com.tencent.mm")) {
+                    if (className.startsWith("com.tencent.mm")||className.startsWith("com.alipay.android")) {
                         showFloatingWindow(className)
                     }
                     //尝试开启监视
@@ -66,18 +66,16 @@ class MyAccessibilityService : AccessibilityService() {
                     //若成功开启监视且检测成功
                     if (it.isWatching && it.checkTarget(root)) {
                         val content = getTextFromNode(root)
-                        //去重
-                        if (it.checkRepeat(content)) {
-                            it.startResolve(packetName, className, windowId, content) {
-                                if(Config.openOver) {
-                                    showFloatingWindow("记账完成")
-                                    GlobalScope.launch(Dispatchers.IO) {
-                                        delay(5000)
-                                        missFloatingWindow()
-                                    }
+                        it.startResolve(packetName, className, windowId, content) {
+                            if (Config.openOver) {
+                                showFloatingWindow("记账完成")
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    delay(5000)
+                                    missFloatingWindow()
                                 }
                             }
                         }
+
                     }
 
                 }
