@@ -27,6 +27,7 @@ class MainViewModel : BaseViewModel<MainState>(MainState()) {
                     list.forEach { auto->
                         BillHelper.insertBill(
                             Bill(
+                                -1,
                                 auto.msg,
                                 "",
                                 OutlayType.Other,

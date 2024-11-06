@@ -41,6 +41,7 @@ import com.example.hustbill.config.Type
 import com.example.hustbill.config.toOutlayType
 import com.example.hustbill.config.toIncomeType
 import com.example.hustbill.config.toStringList
+import com.example.hustbill.config.toTypeList
 import com.example.hustbill.db.Bill
 import com.example.hustbill.db.BillHelper
 import com.example.hustbill.db.IOCallback
@@ -175,13 +176,13 @@ fun AddScreen(
                 )
                 ItemType(
                     "分类",
-                    state.value.toStringList,
-                    state.value.cnName
+                    state.value.toTypeList,
+                    state.value
                 ) {
                     if(state.value is OutlayType){
-                        state.value = it.toOutlayType!!
+                        state.value = it
                     }else{
-                        state.value = it.toIncomeType!!
+                        state.value = it
                     }
                 }
                 ItemSelect(
@@ -223,10 +224,11 @@ fun AddScreen(
                             })){
                             vm.insertBill(
                                 Bill(
+                                    -1,
                                     name.value,
                                     "",
                                     state.value,
-                                    amount.value,
+                                    BigDecimal(amount.value).setScale(2).toString(),
                                     date.value,
                                     ""
                                 ),
@@ -331,9 +333,9 @@ private fun ItemSelect(
 @Composable
 private fun ItemType(
     text: String,
-    list: List<String>,
-    type: String,
-    onClick: (String) -> Unit,
+    list: List<Type>,
+    type: Type,
+    onClick: (Type) -> Unit,
 ) {
 
     Row(
@@ -345,8 +347,8 @@ private fun ItemType(
             modifier = Modifier.padding(vertical = Gap.Small)
         )
         Spacer(modifier = Modifier.width(Gap.Big))
-        SelectType(
-            list, listOf(type), onClick
+        SelectType(modifier = Modifier.fillMaxWidth(),
+            list, listOf(type), colors.secondary, onClick
         )
     }
 }

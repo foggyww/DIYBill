@@ -6,6 +6,7 @@ import com.example.hustbill.config.Type
 import com.example.hustbill.config.toIncomeType
 import com.example.hustbill.config.toOutlayType
 import com.example.hustbill.utils.Date
+import com.example.hustbill.utils.DateRange
 import com.example.hustbill.utils.toDate
 import com.example.hustbill.utils.toInt
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 data class Bill(
+    val id:Int,
     val name: String,
     val msg: String,
     val type: Type,
@@ -114,6 +116,37 @@ object BillHelper {
                     flow.map {
                         it.map { bBill->
                             Bill(
+                                bBill.id,
+                                bBill.name,
+                                bBill.msg,
+                                if(bBill.isOutlay) bBill.type.toOutlayType!! else bBill.type.toIncomeType!!,
+                                bBill.amount,
+                                bBill.date.toDate,
+                                bBill.source,
+                            )
+                        }
+                    }
+                )
+                ioCallback.onCompleted(mFlow)
+            }catch (t:Throwable){
+                ioCallback.onErrorHandler(t)
+            }
+        }
+    }
+
+    suspend fun collectBillListByDateRange(dateRange: DateRange,ioCallback: IOCallback<MFlow<List<Bill>>>){
+        withContext(Dispatchers.IO){
+            try {
+                val flow = getAppDatabase().billDao().collectBillByDate(
+                    Config.bookId,
+                    dateRange.start.toInt,
+                    dateRange.end.toInt
+                )
+                val mFlow =  MFlow(
+                    flow.map {
+                        it.map { bBill->
+                            Bill(
+                                bBill.id,
                                 bBill.name,
                                 bBill.msg,
                                 if(bBill.isOutlay) bBill.type.toOutlayType!! else bBill.type.toIncomeType!!,
@@ -140,6 +173,7 @@ object BillHelper {
                     Config.monthRange.end.toInt
                 ).map {
                     Bill(
+                        it.id,
                         it.name,
                         it.msg,
                         it.type.toOutlayType!!,

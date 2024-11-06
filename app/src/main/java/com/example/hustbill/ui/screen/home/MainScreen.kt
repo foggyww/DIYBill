@@ -37,6 +37,7 @@ import com.example.hustbill.ui.theme.CardShapes
 import com.example.hustbill.ui.theme.Gap
 import com.example.hustbill.ui.theme.RoundedShapes
 import com.example.hustbill.ui.theme.colors
+import com.example.hustbill.ui.widgets.BillItem
 import com.example.hustbill.ui.widgets.CommonCard
 import com.example.hustbill.ui.widgets.CommonText
 import com.example.hustbill.ui.widgets.EasyImage
@@ -130,6 +131,7 @@ fun MonthCard(
     }
 }
 
+
 @Composable
 fun WeekBarCard(
     billState: BillState,
@@ -158,31 +160,10 @@ fun DayBillCard(
     TitleCard(modifier = Modifier.fillMaxWidth(),
         title = dayBill.date.toString,
         verticalArrangement = Arrangement.spacedBy(Gap.Big,Alignment.Top)) {
-        @Composable
-        fun item(
-            text:String,
-            type:String,
-            amount:String
-        ){
-            Row(modifier = Modifier.fillMaxWidth()
-                .height(40.dp),
-                verticalAlignment = Alignment.CenterVertically){
-                Box(modifier = Modifier.size(30.dp)
-                    .clip(RoundedShapes.large)
-                    .background(colors.secondary),
-                    contentAlignment = Alignment.Center){
-                    Text(text=type.substring(0..0), color = colors.background, style = AppTypography.smallMsg)
-                }
-                Spacer(modifier = Modifier.width(Gap.Mid))
-                Text(text=text, color = colors.textSecondary, style = AppTypography.smallMsg)
-                Spacer(modifier = Modifier.weight(1f))
-                Text(text=amount, color = colors.secondary, style = AppTypography.smallMsg)
-            }
-        }
         Column(modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(Gap.Large)){
             for (bill in dayBill.billList){
-                item(bill.name,bill.type.cnName,bill.amount)
+                BillItem(bill)
             }
         }
     }

@@ -70,8 +70,8 @@ val List<Bill>.toDayBillList : List<DayBill>
             }.add(it)
         }
         return map.map {
-            DayBill(it.key.toDate,it.value)
+            DayBill(it.key.toDate,it.value.reversed())
         }.sortedBy {
-            it.date.toInt
+            -it.date.toInt
         }
     }
