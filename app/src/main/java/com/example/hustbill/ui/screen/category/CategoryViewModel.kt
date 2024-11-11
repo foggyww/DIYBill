@@ -8,6 +8,7 @@ import com.example.hustbill.db.BillHelper
 import com.example.hustbill.db.IOCallback
 import com.example.hustbill.ui.provider.toast
 import com.example.hustbill.ui.screen.home.MainState
+import com.example.hustbill.utils.DateRange
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,6 +52,15 @@ class CategoryViewModel() : BaseViewModel<CategoryState>(CategoryState()) {
                     onError = { toast("加载失败" + it.message) }
                 ))
         }
+    }
+
+    fun changeDateRange(
+        newRange:DateRange
+    ){
+        _state.update {
+            it.copy(dateRange = newRange)
+        }
+        loadBillList()
     }
 
     fun changeLabel(

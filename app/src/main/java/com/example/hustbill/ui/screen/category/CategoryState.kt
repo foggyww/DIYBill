@@ -9,12 +9,13 @@ import com.example.hustbill.utils.DateLevel
 import com.example.hustbill.utils.DateRange
 import com.example.hustbill.utils.getDate
 import com.example.hustbill.utils.getRange
+import com.example.hustbill.utils.plus
 import java.math.BigDecimal
 
 
 data class CategoryState(
     val billState:BillState = BillState(),
-    val dateRange: DateRange = getDate().getRange(DateLevel.DAY),
+    val dateRange: DateRange = DateRange(getDate()+(-7),getDate()),
     val labelState: LabelState = LabelState(),
     val totalAmount:BigDecimal = BigDecimal("0.00").setScale(2)
 )

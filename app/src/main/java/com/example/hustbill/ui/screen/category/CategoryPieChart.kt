@@ -3,6 +3,7 @@ package com.example.hustbill.ui.screen.category
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import com.example.hustbill.ui.widgets.CommonPieChart
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieEntry
 
@@ -36,6 +37,8 @@ object CategoryPieChartFactory {
             entries.add(PieEntry(u.sumOf { it.amount.toBigDecimal() }.toFloat(), t.cnName))
         }
         pieChart.setEntries(entries)
+        pieChart.animateY(1400, Easing.EaseInOutQuad)
+        pieChart.invalidate()
     }
 
 }
