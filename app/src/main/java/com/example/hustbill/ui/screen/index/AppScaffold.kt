@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
 import com.example.hustbill.ui.screen.add.AddScreen
+import com.example.hustbill.ui.screen.category.CategoryScreen
 import com.example.hustbill.ui.screen.home.MainScreen
 import com.example.hustbill.ui.screen.setting.SettingScreen
 import com.example.hustbill.ui.theme.colors
@@ -41,6 +42,7 @@ fun AppScaffold(
         ) { page->
             when(page){
                 0 -> MainScreen(contentPadding)
+                1 -> CategoryScreen(contentPadding)
                 3 -> SettingScreen(contentPadding)
             }
         }

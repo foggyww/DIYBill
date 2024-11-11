@@ -21,7 +21,7 @@ val LightColorPalette = AppColors(
     unfocused = grey1,
     background = white,
     geryBackground = grey_light,
-    heavyBackground = gery_shadow,
+    unfocusedSecondary = gery_shadow,
     titleBar = white,
     divider = white3,
     textPrimary = black3,
@@ -46,7 +46,7 @@ data class AppColors(
     val unfocused: Color,//无焦点颜色
     val background: Color,//默认背景色
     val geryBackground : Color, //灰色的背景颜色
-    val heavyBackground:Color, //较重的背景
+    val unfocusedSecondary:Color, //较重的背景
     val titleBar: Color,//标题栏渐变主色
     val divider: Color,//分割线颜色
     val textPrimary: Color,//文字主色

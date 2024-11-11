@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +28,12 @@ fun CommonCard(
     verticalPadding: Dp = Gap.Large,
     horizonPadding: Dp = Gap.Large,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(Gap.Big,Alignment.Top),
+    shape: CornerBasedShape = CardShapes.medium,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ShadowLayout(
         modifier = modifier
-            .clip(CardShapes.medium)
+            .clip(shape)
             .background(colors.background)
             .padding(horizontal = horizonPadding, vertical = verticalPadding),
         elevation = ShadowElevation(0.5.dp, 0.5.dp, 0.5.dp, 0.5.dp),

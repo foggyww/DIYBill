@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.hustbill.config.Type
 import com.example.hustbill.ui.theme.AppTypography
 import com.example.hustbill.ui.theme.CardShapes
 import com.example.hustbill.ui.theme.Gap
@@ -22,25 +24,28 @@ import com.example.hustbill.utils.click
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SelectType(
-    list: List<String>,
-    selected: List<String>,
-    onClick: (String) -> Unit,
+    modifier: Modifier,
+    list: List<Type>,
+    selected: List<Type>,
+    selectedColor: Color,
+    onClick: (Type) -> Unit,
 ){
     @Composable
-    fun CardItem(text: String, select: Boolean, onClick: (String) -> Unit) {
+    fun CardItem(type: Type, select: Boolean, onClick: (Type) -> Unit) {
         Box(modifier = Modifier
             .height(28.dp)
-            .clip(CardShapes.medium)
+            .clip(CardShapes.small)
             .click {
-                onClick.invoke(text)
+                onClick.invoke(type)
             }
-            .background(if (select) colors.secondary else colors.unfocused)
+            .background(if (select) selectedColor else colors.unfocused)
             .padding(vertical = Gap.Small, horizontal = Gap.Mid)) {
-            Text(text, style = AppTypography.smallMsg, color = colors.background)
+            Text(type.cnName, style = AppTypography.smallMsg, color = colors.background)
         }
     }
 
     FlowRow(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Gap.Mid, Alignment.Top),
         horizontalArrangement = Arrangement.spacedBy(Gap.Big, Alignment.Start)
     ) {
