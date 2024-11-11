@@ -48,8 +48,9 @@ fun BillItem(
             )
         }
         Spacer(modifier = Modifier.width(Gap.Mid))
-        Text(text = bill.name, color = colors.textSecondary, style = AppTypography.smallMsg)
-        Spacer(modifier = Modifier.weight(1f))
+        Text(text = bill.name, color = colors.textSecondary, style = AppTypography.smallMsg,
+            modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.width(Gap.Mid))
         Text(text = if(bill.type.isOutlay) "-${bill.amount}" else bill.amount, color = colors.secondary, style = AppTypography.smallMsg)
     }
 }
