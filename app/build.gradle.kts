@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.hustbill"
+    namespace = "com.example.diybill"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.hustbill"
+        applicationId = "com.example.diybill"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -76,6 +76,11 @@ dependencies {
     implementation(libs.tencent.mmkv)
     implementation(libs.widge.mpAndroidChart)
     implementation(libs.widge.shadow)
+    implementation(libs.util.okhttp3)
+    implementation(libs.util.gson)
+    implementation(libs.util.utilcodex)
+    implementation(libs.coil.base)
+    implementation(libs.coil.compose)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

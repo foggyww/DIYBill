@@ -19,6 +19,10 @@ mmkv="1.2.16"
 mp_android="v3.1.0"
 shadow = "1.0.4"
 uiTestAndroid = "1.7.2"
+okHttp = "4.9.1"
+gson = "2.8.5"
+utilcodex = "1.31.1"
+coil="2.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +51,11 @@ tencent-mmkv = {group="com.tencent",name="mmkv",version.ref="mmkv"}
 widge-mpAndroidChart = {group="com.github.PhilJay",name="MPAndroidChart",version.ref="mp_android"}
 widge-shadow = {group="com.github.GIGAMOLE",name="ComposeShadowsPlus",version.ref="shadow"}
 androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "uiTestAndroid" }
+util-okhttp3 = {group="com.squareup.okhttp3",name="okhttp",version.ref="okHttp"}
+util-gson = {group="com.google.code.gson",name="gson",version.ref="gson"}
+util-utilcodex = {group= "com.blankj",name="utilcodex",version.ref="utilcodex"}
+coil-base={group="io.coil-kt",name="coil",version.ref="coil"}
+coil-compose={group="io.coil-kt",name="coil-compose",version.ref="coil"}
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

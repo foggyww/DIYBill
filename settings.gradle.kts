@@ -20,6 +20,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "HustBill"
+rootProject.name = "DIYBill"
 include(":app")
  

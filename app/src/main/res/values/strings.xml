@@ -1,4 +1,6 @@
 <resources>
-    <string name="app_name">HustBill</string>
+    <string name="app_name">DIY记账</string>
     <string name="service_name">自动记账</string>
+    <string name="choose_image">选择图片</string>
+    <string name="choose_local_image">选择本地图片</string>
 </resources>

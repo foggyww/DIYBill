@@ -5,7 +5,8 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -16,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HustBill"
-        tools:targetApi="31">
+        android:usesCleartextTraffic="true"
+    tools:targetApi="31">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -30,7 +32,7 @@
         </activity>
 
         <service
-            android:name="com.example.hustbill.utils.watching.WindowService"
+            android:name="com.example.diybill.utils.watching.WindowService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync">
@@ -38,7 +40,7 @@
         </service>
 
         <service
-            android:name="com.example.hustbill.utils.access.MyAccessibilityService"
+            android:name="com.example.diybill.utils.access.MyAccessibilityService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
