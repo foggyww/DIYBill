@@ -62,7 +62,7 @@ object BillHelper {
     ){
         withContext(Dispatchers.IO) {
             try {
-                getAppDatabase().billDao().insertBill(
+                getAppDatabase().billDao().updateBill(
                     BaseBill(
                         bill.name,
                         bill.msg,
@@ -73,7 +73,9 @@ object BillHelper {
                         bill.source,
                         bill.type is OutlayType,
                         bill.urls
-                    )
+                    ).apply {
+                        id = bill.id
+                    }
                 )
                 ioCallback.onCompleted(Unit)
             } catch (t: Throwable) {
@@ -99,7 +101,9 @@ object BillHelper {
                         bill.source,
                         bill.type is OutlayType,
                         bill.urls
-                    )
+                    ).apply {
+                        id = bill.id
+                    }
                 )
                 ioCallback.onCompleted(Unit)
             } catch (t: Throwable) {
@@ -170,6 +174,28 @@ object BillHelper {
         }
     }
 
+    suspend fun queryBill(id: Int,ioCallback: IOCallback<Bill>){
+        withContext(Dispatchers.IO){
+            try {
+                val r = getAppDatabase().billDao().queryBill(id)
+                ioCallback.onCompleted(
+                    Bill(
+                        r.id,
+                        r.name,
+                        r.msg,
+                        if(r.isOutlay) r.type.toOutlayType else r.type.toIncomeType!!,
+                        r.amount,
+                        r.date.toDate,
+                        r.source,
+                        r.pictureUrls
+                    )
+                )
+            }catch (t:Throwable){
+                ioCallback.onErrorHandler(t)
+            }
+        }
+    }
+
     suspend fun queryBillList(ioCallback: IOCallback<List<Bill>>){
         withContext(Dispatchers.IO){
             try {
@@ -182,7 +208,7 @@ object BillHelper {
                         it.id,
                         it.name,
                         it.msg,
-                        it.type.toOutlayType!!,
+                        it.type.toOutlayType,
                         it.amount,
                         it.date.toDate,
                         it.source,

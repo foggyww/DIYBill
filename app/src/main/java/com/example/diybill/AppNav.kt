@@ -14,8 +14,10 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.navArgument
 import com.example.diybill.ui.screen.add.AddScreen
 import com.example.diybill.ui.screen.index.AppScaffold
+import com.example.diybill.ui.screen.update.UpdateScreen
 import com.example.diybill.ui.theme.Gap
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -27,7 +29,7 @@ fun AppNav(nav: NavHostController = rememberAnimatedNavController()) {
     val paddingValues = PaddingValues(horizontal = Gap.Large)
     AnimatedNavHost(
         navController = nav,
-        startDestination =AppRoute.MAIN
+        startDestination = AppRoute.MAIN
     ) {
         slideAnimateCompose(
             AppRoute.MAIN,
@@ -37,8 +39,18 @@ fun AppNav(nav: NavHostController = rememberAnimatedNavController()) {
 
         slideAnimateCompose(
             AppRoute.ADD
-        ){
+        ) {
             AddScreen(contentPadding = paddingValues)
+        }
+
+        slideAnimateCompose(
+            route = AppRoute.UPDATE + "?id={id}",
+            arguments = listOf(navArgument("id") { defaultValue = -1 })
+        ) {
+            UpdateScreen(
+                it.arguments?.getInt("id") ?: -1,
+                contentPadding = paddingValues
+            )
         }
     }
 }
@@ -48,47 +60,14 @@ fun NavGraphBuilder.slideAnimateCompose(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
 ) =
     composable(
         route,
-        enterTransition = {
-            if(this.targetState.destination.route==AppRoute.ADD
-                ||this.initialState.destination.route==AppRoute.ADD){
-                fadeIn()
-            }else{
-                slideInHorizontally(initialOffsetX = { it })
-            }
-        },
-        exitTransition = {
-            if(this.targetState.destination.route==AppRoute.ADD
-                ||this.initialState.destination.route==AppRoute.ADD){
-                fadeOut()
-            }else{
-                slideOutHorizontally(targetOffsetX = { -it  })
-            }
-        },
-        popEnterTransition = {
-            if(this.targetState.destination.route==AppRoute.ADD
-                ||this.initialState.destination.route==AppRoute.ADD){
-                fadeIn()
-            }else{
-                slideInHorizontally(initialOffsetX = { -it })
-            }
-        },
-        popExitTransition = {
-            if(this.targetState.destination.route==AppRoute.ADD
-                ||this.initialState.destination.route==AppRoute.ADD){
-                fadeOut()
-            }else{
-                slideOutHorizontally(targetOffsetX = { it  })
-            }
-        },
         arguments = arguments,
         deepLinks = deepLinks,
         content = content
     )
-
 
 
 fun NavHostController.replace(route: String) {
@@ -117,4 +96,5 @@ fun NavHostController.pop() {
 object AppRoute {
     const val MAIN = "main"
     const val ADD = "add"
+    const val UPDATE = "update"
 }

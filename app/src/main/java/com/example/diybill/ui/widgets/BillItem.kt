@@ -20,8 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.example.diybill.AppRoute
 import com.example.diybill.R
 import com.example.diybill.db.Bill
+import com.example.diybill.ui.provider.LocalNav
 import com.example.diybill.ui.theme.AppTypography
 import com.example.diybill.ui.theme.CardShapes
 import com.example.diybill.ui.theme.Gap
@@ -34,7 +36,14 @@ import com.example.diybill.utils.clickNoRepeat
 fun BillItem(
     bill: Bill
 ) {
-    Column {
+    val nav = LocalNav.current
+    Column(
+        modifier = Modifier
+            .clip(CardShapes.medium)
+            .clickNoRepeat {
+            nav.navigate(AppRoute.UPDATE+"?id="+bill.id)
+        }
+    ){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -67,19 +76,19 @@ fun BillItem(
             )
         }
         if(bill.urls.isNotEmpty()){
-            Spacer(modifier = Modifier.height(Gap.Mid))
+            Spacer(modifier = Modifier.height(Gap.Small))
             BoxWithConstraints {
                 val width = maxWidth
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(Gap.Big,Alignment.Start)
+                    horizontalArrangement = Arrangement.spacedBy(Gap.Small,Alignment.Start)
                 ) {
                     bill.urls.forEach {
-                        Box(modifier = Modifier.width((width-2*Gap.Big)/3)
+                        Box(modifier = Modifier.width((width-2*Gap.Small)/3)
                             .background(colors.label, CardShapes.medium)
                             .aspectRatio(1f)
-                            .clip(CardShapes.medium),
+                            .clip(CardShapes.small),
                             contentAlignment = Alignment.Center){
                             FileImage(modifier = Modifier.fillMaxSize(),
                                 path = it)

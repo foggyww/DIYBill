@@ -126,6 +126,9 @@ interface BillDao{
     @Delete
     fun deleteBill(baseBill: BaseBill)
 
+    @Query("select * from bill_table where id=:id")
+    fun queryBill(id:Int):BaseBill
+
     @Query("select * from bill_table where date>=:start and date<=:end and bookId=:bookId")
     fun collectBillByDate(bookId: Int,start:Int,end:Int):Flow<List<BaseBill>>
 

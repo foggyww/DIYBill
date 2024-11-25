@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -55,10 +56,12 @@ import com.example.diybill.ui.theme.AppTypography
 import com.example.diybill.ui.theme.CardShapes
 import com.example.diybill.ui.theme.Gap
 import com.example.diybill.ui.theme.ImageSize
+import com.example.diybill.ui.theme.RoundedShapes
 import com.example.diybill.ui.theme.colors
 import com.example.diybill.ui.widgets.AppDialog
 import com.example.diybill.ui.widgets.CacheImage
 import com.example.diybill.ui.widgets.EasyImage
+import com.example.diybill.ui.widgets.FileImage
 import com.example.diybill.ui.widgets.FillButton
 import com.example.diybill.ui.widgets.InputCard
 import com.example.diybill.ui.widgets.PlainTextField
@@ -78,7 +81,7 @@ import java.math.BigDecimal
 @Composable
 fun AddScreen(
     contentPadding: PaddingValues,
-    vm:AddViewModel = viewModel()
+    vm: AddViewModel = viewModel(),
 ) {
 
     val name = remember {
@@ -87,7 +90,7 @@ fun AddScreen(
     val amount = remember {
         mutableStateOf("")
     }
-    val state :MutableState<Type> = remember {
+    val state: MutableState<Type> = remember {
         mutableStateOf(OutlayType.Other)
     }
     val date = remember {
@@ -97,8 +100,10 @@ fun AddScreen(
     val showAddImageDialog = remember { mutableStateOf(false) }
     val nav = LocalNav.current
     val picker = LocalPicker.current
-    Surface(modifier = Modifier.fillMaxSize(),
-        color = colors.background) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = colors.background
+    ) {
         MessageDialog(
             showAddImageDialog
         ) {
@@ -194,9 +199,9 @@ fun AddScreen(
                         state.value.toTypeList,
                         state.value
                     ) {
-                        if(state.value is OutlayType){
+                        if (state.value is OutlayType) {
                             state.value = it
-                        }else{
+                        } else {
                             state.value = it
                         }
                     }
@@ -221,11 +226,15 @@ fun AddScreen(
                                 }
                             }
                         })
-                    ItemImage(vm.imageList.toList()) {
-                        picker.launch(ChooseFile{
-                            vm.imageList.add(it)
+                    ItemImage(vm.imageList.toList(),
+                        onAdd = {
+                            picker.launch(ChooseFile {
+                                vm.imageList.add(it)
+                            })
+                        },
+                        onClose = {
+                            vm.imageList.removeAt(it)
                         })
-                    }
                     Spacer(modifier = Modifier.height(Gap.Large))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -239,9 +248,9 @@ fun AddScreen(
                             textColor = colors.background,
                             text = "确定"
                         ) {
-                            if(checkValues(name.value,amount.value, onError = {
+                            if (checkValues(name.value, amount.value, onError = {
                                     context.toast(it)
-                                })){
+                                })) {
                                 vm.insertBill(
                                     name.value,
                                     state.value,
@@ -255,7 +264,7 @@ fun AddScreen(
 
                                         },
                                         onError = {
-                                            context.toast("添加失败"+it.message)
+                                            context.toast("添加失败" + it.message)
                                         }
                                     )
                                 )
@@ -272,9 +281,9 @@ fun AddScreen(
 
 @Composable
 private fun MessageDialog(
-    showAddImageDialog :MutableState<Boolean>,
-    content: @Composable ()->Unit
-){
+    showAddImageDialog: MutableState<Boolean>,
+    content: @Composable () -> Unit,
+) {
 
     val url = remember { mutableStateOf("") }
 
@@ -282,10 +291,10 @@ private fun MessageDialog(
         AppDialog().apply {
             withTitle(string(R.string.choose_image))
             withView {
-                Column{
+                Column {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         InputCard(
                             modifier = Modifier
                                 .weight(1f)
@@ -295,7 +304,7 @@ private fun MessageDialog(
                             PlainTextField(
                                 value = url.value,
                                 hint = "图片网址",
-                                onValueChange = {url.value = it},
+                                onValueChange = { url.value = it },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Text
                                 ),
@@ -306,13 +315,15 @@ private fun MessageDialog(
                         Spacer(modifier = Modifier.width(Gap.Big))
                         EasyImage(src = R.drawable.choose_url,
                             contentDescription = "选择网址",
-                            modifier = Modifier.size(ImageSize.Mid)
+                            modifier = Modifier
+                                .size(ImageSize.Mid)
                                 .clickNoRepeat {
 
                                 })
                     }
                     Spacer(modifier = Modifier.height(Gap.Large))
-                    Box(modifier = Modifier.fillMaxWidth(0.6f)
+                    Box(modifier = Modifier
+                        .fillMaxWidth(0.6f)
                         .align(Alignment.CenterHorizontally)
                         .clip(CardShapes.medium)
                         .background(colors.primary)
@@ -320,10 +331,12 @@ private fun MessageDialog(
 
                         }
                         .padding(vertical = Gap.Mid),
-                        contentAlignment = Alignment.Center){
-                        Text(string(R.string.choose_local_image),
+                        contentAlignment = Alignment.Center) {
+                        Text(
+                            string(R.string.choose_local_image),
                             style = AppTypography.smallMsg,
-                            color = colors.background)
+                            color = colors.background
+                        )
                     }
 
                 }
@@ -424,36 +437,61 @@ private fun ItemSelect(
 
 @Composable
 private fun ItemImage(
-    imgList :List<String>,
-    onAdd:()->Unit
-){
+    imgList: List<String>,
+    onAdd: () -> Unit,
+    onClose: (Int) -> Unit,
+) {
     val context = LocalContext.current
-    Row(modifier = Modifier.fillMaxWidth()
-        .padding(vertical = Gap.Big),
-        horizontalArrangement = Arrangement.spacedBy(Gap.Big,Alignment.Start)){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Gap.Big),
+        horizontalArrangement = Arrangement.spacedBy(Gap.Big, Alignment.Start)
+    ) {
         var first = true
-        for(i in 0..<MAX_IMAGE_COUNT){
-            Box(modifier = Modifier.weight(1f)
-                .background(colors.label, CardShapes.medium)
-                .aspectRatio(1f)
-                .clip(CardShapes.medium),
-                contentAlignment = Alignment.Center){
+        for (i in 0..<MAX_IMAGE_COUNT) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(colors.label, CardShapes.medium)
+                    .aspectRatio(1f),
+                contentAlignment = Alignment.Center
+            ) {
                 imgList.getOrNull(i)?.let {
-                    CacheImage(
-                        modifier = Modifier.fillMaxSize(),
-                        path = it
+                    Box(modifier = Modifier.clip(CardShapes.small)) {
+                        CacheImage(
+                            modifier = Modifier.fillMaxSize(),
+                            path = it
+                        )
+                    }
+                    EasyImage(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(ImageSize.Small / 2, -(ImageSize.Small / 2))
+                            .size(ImageSize.Small * 1.2f)
+                            .clip(RoundedShapes.large)
+                            .clickNoRepeat {
+                                onClose(i)
+                            },
+                        src = R.drawable.close,
+                        contentDescription = "移除图片"
                     )
                 } ?: run {
-                    if(first){
-                        Box(modifier = Modifier.fillMaxSize()
-                            .clickNoRepeat {
-                                onAdd.invoke()
-                            },
-                            contentAlignment = Alignment.Center){
-                            EasyImage(src = R.drawable.add_image,
+                    if (first) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clickNoRepeat {
+                                    onAdd.invoke()
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            EasyImage(
+                                src = R.drawable.add_image,
                                 contentDescription = "添加图片",
                                 modifier = Modifier.fillMaxSize(0.5f),
-                                tint = colors.unfocused)
+                                tint = colors.unfocused
+                            )
                         }
                         first = false
                     }
@@ -480,30 +518,30 @@ private fun ItemType(
             modifier = Modifier.padding(vertical = Gap.Small)
         )
         Spacer(modifier = Modifier.width(Gap.Big))
-        SelectType(modifier = Modifier.fillMaxWidth(),
+        SelectType(
+            modifier = Modifier.fillMaxWidth(),
             list, listOf(type), colors.secondary, onClick
         )
     }
 }
 
 
-
 private fun checkValues(
-    name:String,
-    amount:String,
-    onError:(String)->Unit
-):Boolean{
-    if(name.isBlank()){
+    name: String,
+    amount: String,
+    onError: (String) -> Unit,
+): Boolean {
+    if (name.isBlank()) {
         onError("名称不可为空")
         return false
     }
 
-    if(amount.isBlank()){
+    if (amount.isBlank()) {
         onError("金额不可为空")
         return false
     }
 
-    if(amount.toBigDecimal()==BigDecimal("0.00")){
+    if (amount.toBigDecimal() == BigDecimal("0.00")) {
         onError("金额不可为0")
         return false
     }
