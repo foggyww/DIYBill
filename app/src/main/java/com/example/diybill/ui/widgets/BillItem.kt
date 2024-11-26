@@ -38,7 +38,7 @@ fun BillItem(
     val nav = LocalNav.current
     Column(
         modifier = Modifier
-            .clip(CardShapes.medium)
+            .clip(CardShapes.extraSmall)
             .clickNoRepeat {
             nav.navigate(AppRoute.UPDATE+"?id="+bill.id)
         }
@@ -87,7 +87,7 @@ fun BillItem(
                         Box(modifier = Modifier.width((width-2*Gap.Small)/3)
                             .background(colors.label, CardShapes.medium)
                             .aspectRatio(1f)
-                            .clip(CardShapes.small),
+                            .clip(CardShapes.extraSmall),
                             contentAlignment = Alignment.Center){
                             MemCacheImage(modifier = Modifier.fillMaxSize(),
                                 path = it)

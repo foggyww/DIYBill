@@ -72,30 +72,32 @@ import java.math.BigDecimal
 
 @Composable
 fun UpdateScreen(
-    billId:Int,
+    billId: Int,
     contentPadding: PaddingValues,
-    vm:UpdateViewModel = viewModel()
+    vm: UpdateViewModel = viewModel(),
 ) {
     vm.init(billId)
     val bill by vm.bill
-    val name = remember(bill){
+    val name = remember(bill) {
         mutableStateOf(bill?.name)
     }
-    val amount = remember(bill){
+    val amount = remember(bill) {
         mutableStateOf(bill?.amount)
     }
-    val state :MutableState<Type?> = remember(bill){
+    val state: MutableState<Type?> = remember(bill) {
         mutableStateOf(bill?.type)
     }
-    val date = remember(bill){
+    val date = remember(bill) {
         mutableStateOf(bill?.date)
     }
     val context = LocalContext.current
     val showAddImageDialog = remember { mutableStateOf(false) }
     val nav = LocalNav.current
     val picker = LocalPicker.current
-    Surface(modifier = Modifier.fillMaxSize(),
-        color = colors.background) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = colors.background
+    ) {
         MessageDialog(
             showAddImageDialog
         ) {
@@ -143,9 +145,9 @@ fun UpdateScreen(
                                 it.toTypeList,
                                 it
                             ) {
-                                if(state.value is OutlayType){
+                                if (state.value is OutlayType) {
                                     state.value = it
-                                }else{
+                                } else {
                                     state.value = it
                                 }
                             }
@@ -175,8 +177,8 @@ fun UpdateScreen(
                             })
                         ItemImage(vm.imageList.toList(),
                             onAdd = {
-                                picker.launch(ChooseFile{
-                                    vm.imageList.add(Pair(false,it))
+                                picker.launch(ChooseFile {
+                                    vm.imageList.add(Pair(false, it))
                                 })
                             },
                             onClose = {
@@ -217,9 +219,9 @@ fun UpdateScreen(
                                 textColor = colors.background,
                                 text = "确定"
                             ) {
-                                if(checkValues(name.value!!,amount.value!!, onError = {
+                                if (checkValues(name.value!!, amount.value!!, onError = {
                                         context.toast(it)
-                                    })){
+                                    })) {
                                     vm.updateBill(
                                         name.value!!,
                                         state.value!!,
@@ -233,7 +235,7 @@ fun UpdateScreen(
 
                                             },
                                             onError = {
-                                                context.toast("更改失败"+it.message)
+                                                context.toast("更改失败" + it.message)
                                             }
                                         )
                                     )
@@ -251,9 +253,9 @@ fun UpdateScreen(
 
 @Composable
 private fun MessageDialog(
-    showAddImageDialog :MutableState<Boolean>,
-    content: @Composable ()->Unit
-){
+    showAddImageDialog: MutableState<Boolean>,
+    content: @Composable () -> Unit,
+) {
 
     val url = remember { mutableStateOf("") }
 
@@ -261,10 +263,10 @@ private fun MessageDialog(
         AppDialog().apply {
             withTitle(string(R.string.choose_image))
             withView {
-                Column{
+                Column {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         InputCard(
                             modifier = Modifier
                                 .weight(1f)
@@ -274,7 +276,7 @@ private fun MessageDialog(
                             PlainTextField(
                                 value = url.value,
                                 hint = "图片网址",
-                                onValueChange = {url.value = it},
+                                onValueChange = { url.value = it },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Text
                                 ),
@@ -285,13 +287,15 @@ private fun MessageDialog(
                         Spacer(modifier = Modifier.width(Gap.Big))
                         EasyImage(src = R.drawable.choose_url,
                             contentDescription = "选择网址",
-                            modifier = Modifier.size(ImageSize.Mid)
+                            modifier = Modifier
+                                .size(ImageSize.Mid)
                                 .clickNoRepeat {
 
                                 })
                     }
                     Spacer(modifier = Modifier.height(Gap.Large))
-                    Box(modifier = Modifier.fillMaxWidth(0.6f)
+                    Box(modifier = Modifier
+                        .fillMaxWidth(0.6f)
                         .align(Alignment.CenterHorizontally)
                         .clip(CardShapes.medium)
                         .background(colors.primary)
@@ -299,10 +303,12 @@ private fun MessageDialog(
 
                         }
                         .padding(vertical = Gap.Mid),
-                        contentAlignment = Alignment.Center){
-                        Text(string(R.string.choose_local_image),
+                        contentAlignment = Alignment.Center) {
+                        Text(
+                            string(R.string.choose_local_image),
                             style = AppTypography.smallMsg,
-                            color = colors.background)
+                            color = colors.background
+                        )
                     }
 
                 }
@@ -342,7 +348,7 @@ private fun ItemInput(
                 .padding(horizontal = Gap.Mid)
         ) {
             PlainTextField(
-                value = value.value?:"",
+                value = value.value ?: "",
                 hint = "限制长度为${Config.NAME_MAX_LENGTH}",
                 onValueChange = onValueChange,
                 keyboardOptions = KeyboardOptions(
@@ -403,54 +409,61 @@ private fun ItemSelect(
 
 @Composable
 private fun ItemImage(
-    imgList :List<Pair<Boolean,String>>,
-    onAdd:()->Unit,
-    onClose:(Int)->Unit,
-){
-    Row(modifier = Modifier.fillMaxWidth()
-        .padding(vertical = Gap.Big),
-        horizontalArrangement = Arrangement.spacedBy(Gap.Mid,Alignment.Start)){
+    imgList: List<Pair<Boolean, String>>,
+    onAdd: () -> Unit,
+    onClose: (Int) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Gap.Big),
+        horizontalArrangement = Arrangement.spacedBy(Gap.Mid, Alignment.Start)
+    ) {
         var first = true
-        for(i in 0..<MAX_IMAGE_COUNT){
-            Box(modifier = Modifier.weight(1f)
-                .background(colors.label, CardShapes.medium)
-                .aspectRatio(1f),
-                contentAlignment = Alignment.Center){
+        for (i in 0..<MAX_IMAGE_COUNT) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(colors.label, CardShapes.extraSmall)
+                    .aspectRatio(1f),
+                contentAlignment = Alignment.Center
+            ) {
                 imgList.getOrNull(i)?.let {
-                    Box(modifier = Modifier.clip(CardShapes.small)){
-                        if(it.first){
-                            MemCacheImage(
-                                modifier = Modifier.fillMaxSize(),
-                                path = it.second
-                            )
-                        }else{
-                            MemCacheImage(
-                                modifier = Modifier.fillMaxSize(),
-                                path = it.second
-                            )
-                        }
+                    Box(modifier = Modifier.clip(CardShapes.extraSmall)) {
+                        MemCacheImage(
+                            modifier = Modifier.fillMaxSize(),
+                            path = it.second
+                        )
                     }
-                    EasyImage(modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(ImageSize.Small/2,-(ImageSize.Small/2))
-                        .size(ImageSize.Small*1.2f)
-                        .clip(RoundedShapes.large)
-                        .clickNoRepeat {
-                            onClose(i)
-                        },
-                        src = R.drawable.close,
-                        contentDescription = "移除图片")
-                } ?: run {
-                    if(first){
-                        Box(modifier = Modifier.fillMaxSize()
+                    EasyImage(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(ImageSize.Small / 2, -(ImageSize.Small / 2))
+                            .size(ImageSize.Small * 1.2f)
+                            .clip(RoundedShapes.large)
+                            .background(colors.background)
                             .clickNoRepeat {
-                                onAdd.invoke()
+                                onClose(i)
                             },
-                            contentAlignment = Alignment.Center){
-                            EasyImage(src = R.drawable.add_image,
+                        src = R.drawable.close,
+                        contentDescription = "移除图片"
+                    )
+                } ?: run {
+                    if (first) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clickNoRepeat {
+                                    onAdd.invoke()
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            EasyImage(
+                                src = R.drawable.add_image,
                                 contentDescription = "添加图片",
                                 modifier = Modifier.fillMaxSize(0.5f),
-                                tint = colors.unfocused)
+                                tint = colors.unfocused
+                            )
                         }
                         first = false
                     }
@@ -477,30 +490,30 @@ private fun ItemType(
             modifier = Modifier.padding(vertical = Gap.Small)
         )
         Spacer(modifier = Modifier.width(Gap.Big))
-        SelectType(modifier = Modifier.fillMaxWidth(),
+        SelectType(
+            modifier = Modifier.fillMaxWidth(),
             list, listOf(type), colors.secondary, onClick
         )
     }
 }
 
 
-
 private fun checkValues(
-    name:String,
-    amount:String,
-    onError:(String)->Unit
-):Boolean{
-    if(name.isBlank()){
+    name: String,
+    amount: String,
+    onError: (String) -> Unit,
+): Boolean {
+    if (name.isBlank()) {
         onError("名称不可为空")
         return false
     }
 
-    if(amount.isBlank()){
+    if (amount.isBlank()) {
         onError("金额不可为空")
         return false
     }
 
-    if(amount.toBigDecimal()==BigDecimal("0.00")){
+    if (amount.toBigDecimal() == BigDecimal("0.00")) {
         onError("金额不可为0")
         return false
     }

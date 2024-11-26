@@ -439,19 +439,19 @@ private fun ItemImage(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = Gap.Big),
-        horizontalArrangement = Arrangement.spacedBy(Gap.Big, Alignment.Start)
+        horizontalArrangement = Arrangement.spacedBy(Gap.Mid, Alignment.Start)
     ) {
         var first = true
         for (i in 0..<MAX_IMAGE_COUNT) {
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .background(colors.label, CardShapes.medium)
+                    .background(colors.label, CardShapes.extraSmall)
                     .aspectRatio(1f),
                 contentAlignment = Alignment.Center
             ) {
                 imgList.getOrNull(i)?.let {
-                    Box(modifier = Modifier.clip(CardShapes.small)) {
+                    Box(modifier = Modifier.clip(CardShapes.extraSmall)) {
                         MemCacheImage(
                             modifier = Modifier.fillMaxSize(),
                             path = it
@@ -463,6 +463,7 @@ private fun ItemImage(
                             .offset(ImageSize.Small / 2, -(ImageSize.Small / 2))
                             .size(ImageSize.Small * 1.2f)
                             .clip(RoundedShapes.large)
+                            .background(colors.background)
                             .clickNoRepeat {
                                 onClose(i)
                             },

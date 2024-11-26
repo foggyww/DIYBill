@@ -10,6 +10,7 @@ val AppShapes = Shapes(
     large = RoundedCornerShape(0.dp)
 )
 val CardShapes = Shapes(
+    extraSmall = RoundedCornerShape(5.dp),
     small = RoundedCornerShape(10.dp),
     medium = RoundedCornerShape(15.dp),
     large = RoundedCornerShape(20.dp)
