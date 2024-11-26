@@ -10,7 +10,9 @@ import com.bingyan.focuscat.ui.widgets.background.MainBackground
 import com.example.diybill.ui.provider.LocalNav
 import com.example.diybill.ui.provider.LocalPermissionProvider
 import com.example.diybill.ui.provider.LocalPicker
+import com.example.diybill.ui.provider.LocalShowImage
 import com.example.diybill.ui.provider.Picker
+import com.example.diybill.ui.provider.ShowImageProvider
 import com.example.diybill.ui.theme.AppTheme
 import com.example.diybill.utils.permission.PermissionUtil
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -28,11 +30,14 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(
                 LocalPermissionProvider provides PermissionUtil(this),
                 LocalNav provides nav,
-                LocalPicker provides piker
+                LocalPicker provides piker,
+                LocalShowImage provides ShowImageProvider()
             ) {
                 AppTheme {
-                    MainBackground{
-                        AppNav(nav)
+                    LocalShowImage.current.Build {
+                        MainBackground{
+                            AppNav(nav)
+                        }
                     }
                 }
             }

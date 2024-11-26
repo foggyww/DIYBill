@@ -3,20 +3,26 @@ package com.example.diybill.ui.widgets
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.diybill.App
+import com.example.diybill.ui.provider.LocalNav
+import com.example.diybill.ui.provider.LocalShowImage
 import com.example.diybill.utils.AppCache
 import com.example.diybill.utils.AppFile
-import com.example.diybill.utils.getAppCacheFolder
-import com.example.diybill.utils.getAppFile
+import com.example.diybill.utils.clickNoRepeat
+import okio.FileSystem
 
 @Composable
 fun EasyImage(
@@ -39,30 +45,44 @@ fun EasyImage(
     }
 }
 
+
 @Composable
-fun FileImage(modifier: Modifier,
-              path: String){
+fun MemCacheImage(modifier: Modifier,
+                  path: String,
+                  scale: ContentScale = ContentScale.Crop,
+                  alignment: Alignment = Alignment.Center,
+                  clickAble:Boolean = true){
+    val realUrl = remember(path){
+        AppFile.getUri("images/$path")
+            ?: AppCache.getUri(path)
+    }
+    val showImageProvider = LocalShowImage.current
     AsyncImage(
-        modifier=Modifier,
+        modifier = if(clickAble) modifier.clickNoRepeat {
+            showImageProvider.showImage(path)
+        } else modifier,
         model = ImageRequest.Builder(App.CONTEXT)
-            .data(AppFile.getUri("images/$path"))
+            .data(realUrl)
+            .allowHardware(true)
+            .memoryCachePolicy(CachePolicy.ENABLED)
+            .memoryCacheKey(realUrl)
             .build(),
-        contentDescription = "file区图片",
-        contentScale = ContentScale.Crop,
-        alignment = Alignment.Center
+        contentDescription = "图片",
+        contentScale = scale,
+        alignment = alignment,
+        imageLoader = imageLoader
     )
 }
 
-@Composable
-fun CacheImage(
-    modifier: Modifier,
-    path: String,
-) {
-    AsyncImage(
-        modifier = modifier,
-        model = AppCache.getUri(path),
-        contentDescription = "cache区图片",
-        contentScale = ContentScale.Crop,
-        alignment = Alignment.Center
+private val imageLoader = ImageLoader.Builder(App.CONTEXT)
+    .crossfade(true)
+    .allowHardware(true)
+    .memoryCachePolicy(CachePolicy.ENABLED)
+    .memoryCache(
+        MemoryCache.Builder(App.CONTEXT)
+            .strongReferencesEnabled(true)
+            .weakReferencesEnabled(true)
+            .maxSizePercent(0.2)
+            .build()
     )
-}
+    .build()

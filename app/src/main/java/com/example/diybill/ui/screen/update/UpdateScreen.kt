@@ -25,7 +25,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,8 +37,8 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.diybill.R
 import com.example.diybill.base.MAX_IMAGE_COUNT
-import com.example.diybill.config.OutlayType
 import com.example.diybill.config.Config
+import com.example.diybill.config.OutlayType
 import com.example.diybill.config.Type
 import com.example.diybill.config.toTypeList
 import com.example.diybill.db.IOCallback
@@ -54,14 +53,12 @@ import com.example.diybill.ui.theme.Gap
 import com.example.diybill.ui.theme.ImageSize
 import com.example.diybill.ui.theme.RoundedShapes
 import com.example.diybill.ui.theme.colors
-import com.example.diybill.ui.theme.red
 import com.example.diybill.ui.theme.red2
 import com.example.diybill.ui.widgets.AppDialog
-import com.example.diybill.ui.widgets.CacheImage
 import com.example.diybill.ui.widgets.EasyImage
-import com.example.diybill.ui.widgets.FileImage
 import com.example.diybill.ui.widgets.FillButton
 import com.example.diybill.ui.widgets.InputCard
+import com.example.diybill.ui.widgets.MemCacheImage
 import com.example.diybill.ui.widgets.PlainTextField
 import com.example.diybill.ui.widgets.SelectType
 import com.example.diybill.ui.widgets.TextHeader
@@ -422,12 +419,12 @@ private fun ItemImage(
                 imgList.getOrNull(i)?.let {
                     Box(modifier = Modifier.clip(CardShapes.small)){
                         if(it.first){
-                            FileImage(
+                            MemCacheImage(
                                 modifier = Modifier.fillMaxSize(),
                                 path = it.second
                             )
                         }else{
-                            CacheImage(
+                            MemCacheImage(
                                 modifier = Modifier.fillMaxSize(),
                                 path = it.second
                             )

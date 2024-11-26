@@ -24,6 +24,7 @@ inline fun <reified T> localStaticProvider(): ProvidableCompositionLocal<T> {
 val LocalPermissionProvider = localProvider<PermissionUtil>()
 val LocalNav = localProvider<NavHostController>()
 val LocalPicker = localProvider<ActivityResultLauncher<ChooseFile>>()
+val LocalShowImage = localProvider<ShowImageProvider>()
 
 fun Context.toast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()

@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.example.diybill.AppRoute
-import com.example.diybill.R
 import com.example.diybill.db.Bill
 import com.example.diybill.ui.provider.LocalNav
 import com.example.diybill.ui.theme.AppTypography
@@ -90,7 +89,7 @@ fun BillItem(
                             .aspectRatio(1f)
                             .clip(CardShapes.small),
                             contentAlignment = Alignment.Center){
-                            FileImage(modifier = Modifier.fillMaxSize(),
+                            MemCacheImage(modifier = Modifier.fillMaxSize(),
                                 path = it)
                         }
                     }

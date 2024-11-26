@@ -1,6 +1,5 @@
 package com.example.diybill.ui.screen.add
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +22,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,16 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.diybill.R
 import com.example.diybill.base.MAX_IMAGE_COUNT
-import com.example.diybill.config.OutlayType
 import com.example.diybill.config.Config
 import com.example.diybill.config.IncomeType
+import com.example.diybill.config.OutlayType
 import com.example.diybill.config.Type
 import com.example.diybill.config.toTypeList
-import com.example.diybill.db.Bill
 import com.example.diybill.db.IOCallback
 import com.example.diybill.pop
 import com.example.diybill.ui.provider.ChooseFile
@@ -59,11 +54,10 @@ import com.example.diybill.ui.theme.ImageSize
 import com.example.diybill.ui.theme.RoundedShapes
 import com.example.diybill.ui.theme.colors
 import com.example.diybill.ui.widgets.AppDialog
-import com.example.diybill.ui.widgets.CacheImage
 import com.example.diybill.ui.widgets.EasyImage
-import com.example.diybill.ui.widgets.FileImage
 import com.example.diybill.ui.widgets.FillButton
 import com.example.diybill.ui.widgets.InputCard
+import com.example.diybill.ui.widgets.MemCacheImage
 import com.example.diybill.ui.widgets.PlainTextField
 import com.example.diybill.ui.widgets.SelectType
 import com.example.diybill.ui.widgets.ShadowLayout
@@ -71,7 +65,6 @@ import com.example.diybill.ui.widgets.TextHeader
 import com.example.diybill.ui.widgets.TitleSpacer
 import com.example.diybill.utils.click
 import com.example.diybill.utils.clickNoRepeat
-import com.example.diybill.utils.getAppCacheFolder
 import com.example.diybill.utils.getDate
 import com.example.diybill.utils.string
 import com.example.diybill.utils.toString
@@ -459,7 +452,7 @@ private fun ItemImage(
             ) {
                 imgList.getOrNull(i)?.let {
                     Box(modifier = Modifier.clip(CardShapes.small)) {
-                        CacheImage(
+                        MemCacheImage(
                             modifier = Modifier.fillMaxSize(),
                             path = it
                         )
