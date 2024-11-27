@@ -19,6 +19,8 @@ abstract class AutoHelper(
     private val classNames: List<String>,
 ) {
 
+    protected abstract val startWith:String
+
     suspend fun insertBill(autoRecord: AutoRecord, source: String, onSuccess: () -> Unit) {
         BillHelper.insertBill(
             Bill(
@@ -50,7 +52,7 @@ abstract class AutoHelper(
 
         if (this.classNames.contains(className) && packetName == this.packetName) {
             this.isWatching = true
-        } else if(className.startsWith(packetName)){
+        } else if(className.startsWith(startWith)){
             if(isWatching){
                 this.isWatching = false
                 oldContent = ""

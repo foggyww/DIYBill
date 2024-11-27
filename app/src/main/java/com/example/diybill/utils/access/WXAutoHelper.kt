@@ -11,6 +11,9 @@ class WXAutoHelper : AutoHelper(PACKET_NAME, listOf(CLASS_NAME1, CLASS_NAME2)) {
         private const val CLASS_NAME2 = "com.tencent.mm.plugin.scanner.ui.BaseScanUI"
     }
 
+    override val startWith: String
+        get() = PACKET_NAME
+
     override fun checkTarget(root: AccessibilityNodeInfo): Boolean {
         return checkText(root) && checkButton(root)
     }
@@ -77,7 +80,7 @@ class WXAutoHelper : AutoHelper(PACKET_NAME, listOf(CLASS_NAME1, CLASS_NAME2)) {
                 Regex("\\d+\\.\\d+").find(list[i])?.value?.let { amount ->
                     insertBill(
                         AutoRecord(msg, amount, packetName, className, windowId),
-                        "微信",
+                        "微信支付",
                         onSuccess = {
                             onSuccess()
                         }

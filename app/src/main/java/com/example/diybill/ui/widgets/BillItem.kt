@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.example.diybill.AppRoute
@@ -67,15 +68,18 @@ fun BillItem(
             Spacer(modifier = Modifier.width(Gap.Mid))
             Text(
                 text = bill.name, color = colors.textSecondary, style = AppTypography.smallMsg,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxWidth(0.6f)
             )
+            Spacer(modifier = Modifier.width(Gap.Mid))
             supportList.find { it.name==bill.source }?.let {
                 EasyImage(src = it.icon,
                     modifier = Modifier.size(ImageSize.Mid),
                     contentDescription = "icon")
-            }
+            } ?: Spacer(modifier = Modifier.size(ImageSize.Mid))
             Spacer(modifier = Modifier.width(Gap.Mid))
             Text(
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
                 text = if (bill.type.isOutlay) "-${bill.amount}" else bill.amount,
                 color = colors.secondary,
                 style = AppTypography.smallMsg

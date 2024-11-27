@@ -14,7 +14,9 @@ object Config {
 
     const val NAME_MAX_LENGTH = 20
 
-    const val AMOUNT_MAX_LENGTH = 5
+    const val AMOUNT_MAX_LENGTH = "10000.00"
+
+    const val AMOUNT_MIN_LENGTH = "0.00"
 
     var budget:Int = SP.getInt(SIGNAL.BUDGET,2000)
         set(value){

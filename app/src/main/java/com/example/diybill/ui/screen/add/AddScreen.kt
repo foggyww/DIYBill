@@ -35,7 +35,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.diybill.R
-import com.example.diybill.base.MAX_IMAGE_COUNT
 import com.example.diybill.config.Config
 import com.example.diybill.config.IncomeType
 import com.example.diybill.config.OutlayType
@@ -97,263 +96,186 @@ fun AddScreen(
         modifier = Modifier.fillMaxSize(),
         color = colors.background
     ) {
-        MessageDialog(
-            showAddImageDialog
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
         ) {
-            Column(
+            TitleSpacer()
+            TextHeader(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
+                    .fillMaxWidth()
+                    .padding(vertical = Gap.Big),
+                text = "Bills"
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .zIndex(0f)
             ) {
-                TitleSpacer()
-                TextHeader(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = Gap.Big),
-                    text = "Bills"
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .zIndex(0f)
+                @Composable
+                fun Item(
+                    text: String,
+                    selected: Boolean,
+                    onClick: () -> Unit,
                 ) {
-                    @Composable
-                    fun Item(
-                        text: String,
-                        selected: Boolean,
-                        onClick: () -> Unit,
-                    ) {
-                        ShadowLayout(
-                            modifier = Modifier
-                                .weight(0.3f)
-                                .height(48.dp)
-                                .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
-                                .click {
-                                    onClick()
-                                }
-                                .background(
-                                    if (selected) colors.background else colors.background.copy(
-                                        alpha = 0.6f
-                                    )
+                    ShadowLayout(
+                        modifier = Modifier
+                            .weight(0.3f)
+                            .height(48.dp)
+                            .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
+                            .click {
+                                onClick()
+                            }
+                            .background(
+                                if (selected) colors.background else colors.background.copy(
+                                    alpha = 0.6f
                                 )
-                                .zIndex(if (selected) 1f else 0f),
-                            verticalArrangement = Arrangement.spacedBy(
-                                Gap.Big,
-                                Alignment.CenterVertically
-                            ),
-                            alpha = 0.1f,
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = text, style = AppTypography.smallTitle,
-                                    color = if (selected) colors.secondary else colors.unfocused
-                                )
-                            }
-                        }
-                    }
-                    Item("支出账单", state.value is OutlayType) {
-                        state.value = OutlayType.Other
-                    }
-                    Item("收入账单", state.value is IncomeType) {
-                        state.value = IncomeType.Other
-                    }
-                    Spacer(modifier = Modifier.weight(0.4f))
-                }
-                Column(
-                    modifier = Modifier
-                        .rsBlurShadow(
-                            radius = 10.dp,
-                            shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
-                            color = colors.unfocused.copy(alpha = 0.2f),
-                            offset = DpOffset(0.dp, 10.dp)
-                        )
-                        .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
-                        .background(colors.background)
-                        .padding(horizontal = Gap.Large, vertical = Gap.Large)
-                        .zIndex(1f),
-                    verticalArrangement = Arrangement.spacedBy(Gap.Big, Alignment.Top),
-                ) {
-                    ItemInput("名称",
-                        KeyboardType.Text,
-                        name,
-                        onValueChange = {
-                            if (it.length <= Config.NAME_MAX_LENGTH) {
-                                name.value = it
-                            }
-                        }
-                    )
-                    ItemType(
-                        "分类",
-                        state.value.toTypeList,
-                        state.value
+                            )
+                            .zIndex(if (selected) 1f else 0f),
+                        verticalArrangement = Arrangement.spacedBy(
+                            Gap.Big,
+                            Alignment.CenterVertically
+                        ),
+                        alpha = 0.1f,
                     ) {
-                        if (state.value is OutlayType) {
-                            state.value = it
-                        } else {
-                            state.value = it
-                        }
-                    }
-                    ItemSelect(
-                        "日期",
-                        date.value.toString
-                    )
-                    ItemInput("金额",
-                        KeyboardType.Number,
-                        amount,
-                        onValueChange = {
-                            try {
-                                val bd = BigDecimal(it).setScale(2)
-                                if (bd < BigDecimal("10000.00")
-                                    && bd >= BigDecimal("0.00")
-                                ) {
-                                    amount.value = it
-                                }
-                            } catch (_: Throwable) {
-                                if (it == "") {
-                                    amount.value = it
-                                }
-                            }
-                        })
-                    ItemImage(vm.imageList.toList(),
-                        onAdd = {
-                            picker.launch(ChooseFile {
-                                vm.imageList.add(it)
-                            })
-                        },
-                        onClose = {
-                            vm.imageList.removeAt(it)
-                        })
-                    Spacer(modifier = Modifier.height(Gap.Large))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        FillButton(
+                        Row(
                             modifier = Modifier
-                                .padding(horizontal = Gap.Mid, vertical = Gap.Small),
-                            color = colors.primary,
-                            style = AppTypography.smallTitle,
-                            textColor = colors.background,
-                            text = "确定"
+                                .fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if (checkValues(name.value, amount.value, onError = {
-                                    context.toast(it)
-                                })) {
-                                vm.insertBill(
-                                    name.value,
-                                    state.value,
-                                    BigDecimal(amount.value).setScale(2).toString(),
-                                    date.value,
-                                    vm.imageList.toList(),
-                                    IOCallback(
-                                        onSuccess = {
-                                            nav.pop()
-                                            context.toast("添加成功")
-
-                                        },
-                                        onError = {
-                                            context.toast("添加失败" + it.message)
-                                        }
-                                    )
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-}
-
-@Composable
-private fun MessageDialog(
-    showAddImageDialog: MutableState<Boolean>,
-    content: @Composable () -> Unit,
-) {
-
-    val url = remember { mutableStateOf("") }
-
-    val addImageDialog = remember {
-        AppDialog().apply {
-            withTitle(string(R.string.choose_image))
-            withView {
-                Column {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        InputCard(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(28.dp)
-                                .padding(horizontal = Gap.Mid)
-                        ) {
-                            PlainTextField(
-                                value = url.value,
-                                hint = "图片网址",
-                                onValueChange = { url.value = it },
-                                keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text
-                                ),
-                                textStyle = AppTypography.inputMsg,
-                                hintColor = colors.unfocused
+                            Text(
+                                text = text, style = AppTypography.smallTitle,
+                                color = if (selected) colors.secondary else colors.unfocused
                             )
                         }
-                        Spacer(modifier = Modifier.width(Gap.Big))
-                        EasyImage(src = R.drawable.choose_url,
-                            contentDescription = "选择网址",
-                            modifier = Modifier
-                                .size(ImageSize.Mid)
-                                .clickNoRepeat {
-
-                                })
                     }
-                    Spacer(modifier = Modifier.height(Gap.Large))
-                    Box(modifier = Modifier
-                        .fillMaxWidth(0.6f)
-                        .align(Alignment.CenterHorizontally)
-                        .clip(CardShapes.medium)
-                        .background(colors.primary)
-                        .clickNoRepeat {
-
+                }
+                Item("支出账单", state.value is OutlayType) {
+                    state.value = OutlayType.Other
+                }
+                Item("收入账单", state.value is IncomeType) {
+                    state.value = IncomeType.Other
+                }
+                Spacer(modifier = Modifier.weight(0.4f))
+            }
+            Column(
+                modifier = Modifier
+                    .rsBlurShadow(
+                        radius = 10.dp,
+                        shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+                        color = colors.unfocused.copy(alpha = 0.2f),
+                        offset = DpOffset(0.dp, 10.dp)
+                    )
+                    .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
+                    .background(colors.background)
+                    .padding(horizontal = Gap.Large, vertical = Gap.Large)
+                    .zIndex(1f),
+                verticalArrangement = Arrangement.spacedBy(Gap.Big, Alignment.Top),
+            ) {
+                ItemInput("名称",
+                    KeyboardType.Text,
+                    hint = "限制长度为${Config.NAME_MAX_LENGTH}",
+                    name.value,
+                    onValueChange = {
+                        if (it.length <= Config.NAME_MAX_LENGTH) {
+                            name.value = it
                         }
-                        .padding(vertical = Gap.Mid),
-                        contentAlignment = Alignment.Center) {
-                        Text(
-                            string(R.string.choose_local_image),
-                            style = AppTypography.smallMsg,
-                            color = colors.background
-                        )
+                    },
+                )
+                ItemType(
+                    "分类",
+                    state.value.toTypeList,
+                    state.value
+                ) {
+                    if (state.value is OutlayType) {
+                        state.value = it
+                    } else {
+                        state.value = it
                     }
+                }
+                ItemSelect(
+                    "日期",
+                    date.value.toString
+                )
+                ItemInput("金额",
+                    KeyboardType.Number,
+                    hint = "限制金额为${Config.AMOUNT_MAX_LENGTH}",
+                    amount.value,
+                    onValueChange = {
+                        try {
+                            val bd = BigDecimal(it).setScale(2)
+                            if (bd <= BigDecimal(Config.AMOUNT_MAX_LENGTH)
+                                && bd >= BigDecimal(Config.AMOUNT_MIN_LENGTH)
+                            ) {
+                                amount.value = it
+                            }
+                        } catch (_: Throwable) {
+                            if (it == "") {
+                                amount.value = it
+                            }
+                        }
+                    })
+                ItemImage(vm.imageList.toList(),
+                    onAdd = {
+                        picker.launch(ChooseFile {
+                            vm.imageList.add(it)
+                        })
+                    },
+                    onClose = {
+                        vm.imageList.removeAt(it)
+                    })
+                Spacer(modifier = Modifier.height(Gap.Large))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    FillButton(
+                        modifier = Modifier
+                            .padding(horizontal = Gap.Mid, vertical = Gap.Small),
+                        color = colors.primary,
+                        style = AppTypography.smallTitle,
+                        textColor = colors.background,
+                        text = "确定"
+                    ) {
+                        if (checkValues(name.value, amount.value, onError = {
+                                context.toast(it)
+                            })) {
+                            vm.insertBill(
+                                name.value,
+                                state.value,
+                                BigDecimal(amount.value).setScale(2).toString(),
+                                date.value,
+                                vm.imageList.toList(),
+                                IOCallback(
+                                    onSuccess = {
+                                        nav.pop()
+                                        context.toast("添加成功")
 
+                                    },
+                                    onError = {
+                                        context.toast("添加失败" + it.message)
+                                    }
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
 
-    addImageDialog.Build(
-        show = showAddImageDialog.value,
-        onDismissRequest = {
-            showAddImageDialog.value = false
-        },
-        properties = DialogProperties()
-    ) {
-        content()
     }
 
 }
 
+
 @Composable
-private fun ItemInput(
+fun ItemInput(
     text: String,
     type: KeyboardType,
-    value: MutableState<String>,
+    hint:String,
+    value: String,
     onValueChange: (String) -> Unit,
 ) {
     Row(
@@ -365,18 +287,17 @@ private fun ItemInput(
         InputCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(28.dp)
                 .padding(horizontal = Gap.Mid)
         ) {
             PlainTextField(
-                value = value.value,
-                hint = "限制长度为${Config.NAME_MAX_LENGTH}",
+                modifier = Modifier.padding(vertical = Gap.Small)
+                    .fillMaxWidth(),
+                value = value,
+                hint = hint,
                 onValueChange = onValueChange,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = type
                 ),
-                singleLine = true,
-                maxLines = 1,
                 textStyle = AppTypography.inputMsg,
                 hintColor = colors.unfocused
             )
@@ -385,7 +306,7 @@ private fun ItemInput(
 }
 
 @Composable
-private fun ItemSelect(
+fun ItemSelect(
     text: String,
     value: String,
 ) {
@@ -429,7 +350,7 @@ private fun ItemSelect(
 }
 
 @Composable
-private fun ItemImage(
+fun ItemImage(
     imgList: List<String>,
     onAdd: () -> Unit,
     onClose: (Int) -> Unit,
@@ -442,7 +363,7 @@ private fun ItemImage(
         horizontalArrangement = Arrangement.spacedBy(Gap.Mid, Alignment.Start)
     ) {
         var first = true
-        for (i in 0..<MAX_IMAGE_COUNT) {
+        for (i in 0..<Config.MAX_IMAGE_COUNT) {
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -496,7 +417,7 @@ private fun ItemImage(
 }
 
 @Composable
-private fun ItemType(
+fun ItemType(
     text: String,
     list: List<Type>,
     type: Type,
@@ -520,7 +441,7 @@ private fun ItemType(
 }
 
 
-private fun checkValues(
+fun checkValues(
     name: String,
     amount: String,
     onError: (String) -> Unit,
