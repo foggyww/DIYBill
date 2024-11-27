@@ -1,10 +1,13 @@
 package com.example.diybill.ui.screen.setting
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,15 +25,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.diybill.R
 import com.example.diybill.config.Config
 import com.example.diybill.ui.provider.LocalPermissionProvider
 import com.example.diybill.ui.theme.AppTypography
 import com.example.diybill.ui.theme.Gap
+import com.example.diybill.ui.theme.ImageSize
+import com.example.diybill.ui.theme.RoundedShapes
 import com.example.diybill.ui.theme.colors
 import com.example.diybill.ui.widgets.AppSwitch
+import com.example.diybill.ui.widgets.EasyImage
 import com.example.diybill.ui.widgets.TextHeader
 import com.example.diybill.ui.widgets.TitleCard
 import com.example.diybill.utils.permission.AppPermission
@@ -90,6 +99,18 @@ fun SettingScreen(
 //            ) {
 //
 //            }
+        Box(modifier = Modifier.fillMaxWidth()
+            .height(120.dp),
+            contentAlignment = Alignment.Center){
+            EasyImage(
+                src = R.mipmap.ic_launcher_original,
+                contentDescription = "应用图标",
+                modifier = Modifier.fillMaxHeight()
+                    .aspectRatio(1f)
+                    .clip(RoundedShapes.large)
+            )
+        }
+        Spacer(modifier = Modifier.height(Gap.Large))
         TitleCard(
             modifier = Modifier.fillMaxWidth(),
             title = "权限设置"
