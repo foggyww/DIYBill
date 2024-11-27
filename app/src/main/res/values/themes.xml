@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.HustBill" parent="android:Theme.Material.Light.NoActionBar" >
+    <style name="Theme.DIYBill" parent="android:Theme.Material.Light.NoActionBar" >
         <item name="android:textSelectHandleLeft" >@drawable/none</item>
         <item name="android:textSelectHandleRight" >@drawable/none</item>
         <item name="android:textSelectHandle" >@drawable/none</item>
