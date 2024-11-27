@@ -125,11 +125,6 @@ fun SettingScreen(
             ) {
                 Config.openOver = !Config.openOver
                 autoMap[AutoType.OVER] = Config.openOver
-                if (autoMap[AutoType.OVER]!!) {
-                    vm.openOver(context)
-                } else {
-                    vm.closeOver(context)
-                }
             }
         }
         LazyColumn {

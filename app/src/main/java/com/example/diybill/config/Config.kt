@@ -10,7 +10,9 @@ import com.example.diybill.utils.toString
 
 object Config {
 
-    const val NAME_MAX_LENGTH = 10
+    const val MAX_IMAGE_COUNT = 3
+
+    const val NAME_MAX_LENGTH = 20
 
     const val AMOUNT_MAX_LENGTH = 5
 

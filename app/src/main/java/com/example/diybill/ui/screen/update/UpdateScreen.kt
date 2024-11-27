@@ -36,7 +36,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.diybill.R
-import com.example.diybill.base.MAX_IMAGE_COUNT
 import com.example.diybill.config.Config
 import com.example.diybill.config.OutlayType
 import com.example.diybill.config.Type
@@ -420,7 +419,7 @@ private fun ItemImage(
         horizontalArrangement = Arrangement.spacedBy(Gap.Mid, Alignment.Start)
     ) {
         var first = true
-        for (i in 0..<MAX_IMAGE_COUNT) {
+        for (i in 0..<Config.MAX_IMAGE_COUNT) {
             Box(
                 modifier = Modifier
                     .weight(1f)

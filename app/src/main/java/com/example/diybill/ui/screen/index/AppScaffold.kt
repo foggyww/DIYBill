@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import com.example.diybill.ui.screen.category.CategoryScreen
 import com.example.diybill.ui.screen.home.MainScreen
 import com.example.diybill.ui.screen.setting.SettingScreen
+import com.example.diybill.ui.screen.support.SupportScreen
 import com.example.diybill.ui.theme.colors
 import com.example.diybill.ui.widgets.TitleSpacer
 
@@ -41,6 +42,7 @@ fun AppScaffold(
             when(page){
                 0 -> MainScreen(contentPadding)
                 1 -> CategoryScreen(contentPadding)
+                2 -> SupportScreen(contentPadding)
                 3 -> SettingScreen(contentPadding)
             }
         }

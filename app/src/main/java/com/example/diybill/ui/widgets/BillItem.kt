@@ -23,9 +23,11 @@ import androidx.compose.ui.unit.times
 import com.example.diybill.AppRoute
 import com.example.diybill.db.Bill
 import com.example.diybill.ui.provider.LocalNav
+import com.example.diybill.ui.screen.support.supportList
 import com.example.diybill.ui.theme.AppTypography
 import com.example.diybill.ui.theme.CardShapes
 import com.example.diybill.ui.theme.Gap
+import com.example.diybill.ui.theme.ImageSize
 import com.example.diybill.ui.theme.RoundedShapes
 import com.example.diybill.ui.theme.colors
 import com.example.diybill.utils.clickNoRepeat
@@ -67,6 +69,11 @@ fun BillItem(
                 text = bill.name, color = colors.textSecondary, style = AppTypography.smallMsg,
                 modifier = Modifier.weight(1f)
             )
+            supportList.find { it.name==bill.source }?.let {
+                EasyImage(src = it.icon,
+                    modifier = Modifier.size(ImageSize.Mid),
+                    contentDescription = "icon")
+            }
             Spacer(modifier = Modifier.width(Gap.Mid))
             Text(
                 text = if (bill.type.isOutlay) "-${bill.amount}" else bill.amount,
