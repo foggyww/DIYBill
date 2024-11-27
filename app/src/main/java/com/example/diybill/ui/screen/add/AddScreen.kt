@@ -62,6 +62,8 @@ import com.example.diybill.ui.widgets.SelectType
 import com.example.diybill.ui.widgets.ShadowLayout
 import com.example.diybill.ui.widgets.TextHeader
 import com.example.diybill.ui.widgets.TitleSpacer
+import com.example.diybill.ui.widgets.rememberDateDialog
+import com.example.diybill.utils.Date
 import com.example.diybill.utils.click
 import com.example.diybill.utils.clickNoRepeat
 import com.example.diybill.utils.getDate
@@ -89,182 +91,191 @@ fun AddScreen(
         mutableStateOf(getDate())
     }
     val context = LocalContext.current
-    val showAddImageDialog = remember { mutableStateOf(false) }
+    val showDateDialog = remember { mutableStateOf(false) }
     val nav = LocalNav.current
     val picker = LocalPicker.current
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = colors.background
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
+        DateDialog(
+            show = showDateDialog,
+            onChangeDate = {
+                date.value = it
+            },
+            initDate = getDate()
         ) {
-            TitleSpacer()
-            TextHeader(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = Gap.Big),
-                text = "Bills"
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .zIndex(0f)
-            ) {
-                @Composable
-                fun Item(
-                    text: String,
-                    selected: Boolean,
-                    onClick: () -> Unit,
-                ) {
-                    ShadowLayout(
-                        modifier = Modifier
-                            .weight(0.3f)
-                            .height(48.dp)
-                            .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
-                            .click {
-                                onClick()
-                            }
-                            .background(
-                                if (selected) colors.background else colors.background.copy(
-                                    alpha = 0.6f
-                                )
-                            )
-                            .zIndex(if (selected) 1f else 0f),
-                        verticalArrangement = Arrangement.spacedBy(
-                            Gap.Big,
-                            Alignment.CenterVertically
-                        ),
-                        alpha = 0.1f,
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = text, style = AppTypography.smallTitle,
-                                color = if (selected) colors.secondary else colors.unfocused
-                            )
-                        }
-                    }
-                }
-                Item("支出账单", state.value is OutlayType) {
-                    state.value = OutlayType.Other
-                }
-                Item("收入账单", state.value is IncomeType) {
-                    state.value = IncomeType.Other
-                }
-                Spacer(modifier = Modifier.weight(0.4f))
-            }
             Column(
                 modifier = Modifier
-                    .rsBlurShadow(
-                        radius = 10.dp,
-                        shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
-                        color = colors.unfocused.copy(alpha = 0.2f),
-                        offset = DpOffset(0.dp, 10.dp)
-                    )
-                    .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
-                    .background(colors.background)
-                    .padding(horizontal = Gap.Large, vertical = Gap.Large)
-                    .zIndex(1f),
-                verticalArrangement = Arrangement.spacedBy(Gap.Big, Alignment.Top),
+                    .fillMaxSize()
+                    .padding(contentPadding)
             ) {
-                ItemInput("名称",
-                    KeyboardType.Text,
-                    hint = "限制长度为${Config.NAME_MAX_LENGTH}",
-                    name.value,
-                    onValueChange = {
-                        if (it.length <= Config.NAME_MAX_LENGTH) {
-                            name.value = it
-                        }
-                    },
+                TitleSpacer()
+                TextHeader(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = Gap.Big),
+                    text = "Bills"
                 )
-                ItemType(
-                    "分类",
-                    state.value.toTypeList,
-                    state.value
-                ) {
-                    if (state.value is OutlayType) {
-                        state.value = it
-                    } else {
-                        state.value = it
-                    }
-                }
-                ItemSelect(
-                    "日期",
-                    date.value.toString
-                )
-                ItemInput("金额",
-                    KeyboardType.Number,
-                    hint = "限制金额为${Config.AMOUNT_MAX_LENGTH}",
-                    amount.value,
-                    onValueChange = {
-                        try {
-                            val bd = BigDecimal(it).setScale(2)
-                            if (bd <= BigDecimal(Config.AMOUNT_MAX_LENGTH)
-                                && bd >= BigDecimal(Config.AMOUNT_MIN_LENGTH)
-                            ) {
-                                amount.value = it
-                            }
-                        } catch (_: Throwable) {
-                            if (it == "") {
-                                amount.value = it
-                            }
-                        }
-                    })
-                ItemImage(vm.imageList.toList(),
-                    onAdd = {
-                        picker.launch(ChooseFile {
-                            vm.imageList.add(it)
-                        })
-                    },
-                    onClose = {
-                        vm.imageList.removeAt(it)
-                    })
-                Spacer(modifier = Modifier.height(Gap.Large))
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .zIndex(0f)
                 ) {
-                    FillButton(
-                        modifier = Modifier
-                            .padding(horizontal = Gap.Mid, vertical = Gap.Small),
-                        color = colors.primary,
-                        style = AppTypography.smallTitle,
-                        textColor = colors.background,
-                        text = "确定"
+                    @Composable
+                    fun Item(
+                        text: String,
+                        selected: Boolean,
+                        onClick: () -> Unit,
                     ) {
-                        if (checkValues(name.value, amount.value, onError = {
-                                context.toast(it)
-                            })) {
-                            vm.insertBill(
-                                name.value,
-                                state.value,
-                                BigDecimal(amount.value).setScale(2).toString(),
-                                date.value,
-                                vm.imageList.toList(),
-                                IOCallback(
-                                    onSuccess = {
-                                        nav.pop()
-                                        context.toast("添加成功")
-
-                                    },
-                                    onError = {
-                                        context.toast("添加失败" + it.message)
-                                    }
+                        ShadowLayout(
+                            modifier = Modifier
+                                .weight(0.3f)
+                                .height(48.dp)
+                                .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
+                                .click {
+                                    onClick()
+                                }
+                                .background(
+                                    if (selected) colors.background else colors.background.copy(
+                                        alpha = 0.6f
+                                    )
                                 )
-                            )
+                                .zIndex(if (selected) 1f else 0f),
+                            verticalArrangement = Arrangement.spacedBy(
+                                Gap.Big,
+                                Alignment.CenterVertically
+                            ),
+                            alpha = 0.1f,
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = text, style = AppTypography.smallTitle,
+                                    color = if (selected) colors.secondary else colors.unfocused
+                                )
+                            }
+                        }
+                    }
+                    Item("支出账单", state.value is OutlayType) {
+                        state.value = OutlayType.Other
+                    }
+                    Item("收入账单", state.value is IncomeType) {
+                        state.value = IncomeType.Other
+                    }
+                    Spacer(modifier = Modifier.weight(0.4f))
+                }
+                Column(
+                    modifier = Modifier
+                        .rsBlurShadow(
+                            radius = 10.dp,
+                            shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+                            color = colors.unfocused.copy(alpha = 0.2f),
+                            offset = DpOffset(0.dp, 10.dp)
+                        )
+                        .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
+                        .background(colors.background)
+                        .padding(horizontal = Gap.Large, vertical = Gap.Large)
+                        .zIndex(1f),
+                    verticalArrangement = Arrangement.spacedBy(Gap.Big, Alignment.Top),
+                ) {
+                    ItemInput("名称",
+                        KeyboardType.Text,
+                        hint = "限制长度为${Config.NAME_MAX_LENGTH}",
+                        name.value,
+                        onValueChange = {
+                            if (it.length <= Config.NAME_MAX_LENGTH) {
+                                name.value = it
+                            }
+                        },
+                    )
+                    ItemType(
+                        "分类",
+                        state.value.toTypeList,
+                        state.value
+                    ) {
+                        if (state.value is OutlayType) {
+                            state.value = it
+                        } else {
+                            state.value = it
+                        }
+                    }
+                    ItemSelect(
+                        "日期",
+                        date.value.toString,
+                    ){
+                        showDateDialog.value = true
+                    }
+                    ItemInput("金额",
+                        KeyboardType.Number,
+                        hint = "限制金额为${Config.AMOUNT_MAX_LENGTH}",
+                        amount.value,
+                        onValueChange = {
+                            try {
+                                val bd = BigDecimal(it).setScale(2)
+                                if (bd <= BigDecimal(Config.AMOUNT_MAX_LENGTH)
+                                    && bd >= BigDecimal(Config.AMOUNT_MIN_LENGTH)
+                                ) {
+                                    amount.value = it
+                                }
+                            } catch (_: Throwable) {
+                                if (it == "") {
+                                    amount.value = it
+                                }
+                            }
+                        })
+                    ItemImage(vm.imageList.toList(),
+                        onAdd = {
+                            picker.launch(ChooseFile {
+                                vm.imageList.add(it)
+                            })
+                        },
+                        onClose = {
+                            vm.imageList.removeAt(it)
+                        })
+                    Spacer(modifier = Modifier.height(Gap.Large))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        FillButton(
+                            modifier = Modifier
+                                .padding(horizontal = Gap.Mid, vertical = Gap.Small),
+                            color = colors.primary,
+                            style = AppTypography.smallTitle,
+                            textColor = colors.background,
+                            text = "确定"
+                        ) {
+                            if (checkValues(name.value, amount.value, onError = {
+                                    context.toast(it)
+                                })) {
+                                vm.insertBill(
+                                    name.value,
+                                    state.value,
+                                    BigDecimal(amount.value).setScale(2).toString(),
+                                    date.value,
+                                    vm.imageList.toList(),
+                                    IOCallback(
+                                        onSuccess = {
+                                            nav.pop()
+                                            context.toast("添加成功")
+
+                                        },
+                                        onError = {
+                                            context.toast("添加失败" + it.message)
+                                        }
+                                    )
+                                )
+                            }
                         }
                     }
                 }
             }
         }
-
     }
 
 }
@@ -306,9 +317,41 @@ fun ItemInput(
 }
 
 @Composable
+fun DateDialog(
+    show:MutableState<Boolean>,
+    onChangeDate:(Date)->Unit,
+    initDate: Date,
+   content: @Composable ()->Unit
+){
+
+    val dateDialog = rememberDateDialog(
+        initDate = initDate,
+        positive = {
+            onChangeDate.invoke(it)
+            show.value = false
+        },
+        negative = {
+            show.value = false
+        }
+    )
+    dateDialog.Build(
+        show = show.value,
+        properties = DialogProperties(),
+        onDismissRequest = {
+            show.value = false
+        }
+    ) {
+        content()
+    }
+
+
+}
+
+@Composable
 fun ItemSelect(
     text: String,
     value: String,
+    onClick:()->Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -342,7 +385,7 @@ fun ItemSelect(
                     .aspectRatio(1f)
                     .clip(CardShapes.small)
                     .click {
-
+                        onClick.invoke()
                     }
             )
         }

@@ -12,19 +12,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewModelScope
@@ -132,8 +137,9 @@ fun MonthCard(
                     src = src,
                     contentDescription = "圆圈")
                 Spacer(modifier = Modifier.width(Gap.Small))
-                CommonText(text =text, color = colors.textSecondary, style = AppTypography.smallMsg)
-                CommonText(text = amount.toString(), color = color, style = AppTypography.smallMsg)
+                CommonText(text =text, color = colors.textSecondary, style = AppTypography.smallMsg,)
+                CommonText(text = amount.toString(), color = color, style = AppTypography.smallMsg,
+                    modifier = Modifier.widthIn(max = 48.dp))
                 CommonText(text="元", color = colors.textSecondary, style = AppTypography.smallMsg)
             }
             capsule("本月支出:",nowConsume, colors.secondary,R.drawable.circle_pink)
@@ -152,7 +158,7 @@ fun WeekBarCard(
         modifier = Modifier.fillMaxWidth(),
         horizonPadding = Gap.Mid,
     ) {
-        Text(modifier = Modifier.padding(horizontal = Gap.Big),text = "七日支出", style = AppTypography.smallTitle)
+        Text(modifier = Modifier.padding(horizontal = Gap.Mid),text = "七日支出", style = AppTypography.smallTitle)
         if(billState.dayBillList.isNotEmpty()){
             AndroidView(
                 modifier = Modifier.fillMaxWidth()

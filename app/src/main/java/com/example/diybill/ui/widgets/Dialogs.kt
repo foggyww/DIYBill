@@ -29,7 +29,83 @@ import com.example.diybill.utils.toInt
 import com.example.diybill.utils.toString
 
 @Composable
-fun rememberChooseDateDialog(
+fun rememberDateDialog(
+    positive: (Date) -> Unit ,
+    negative: () -> Unit ,
+    initDate: Date,
+    title: String = "请选择日期",
+):AppDialog{
+    val date = remember(initDate,
+        positive,negative){
+        mutableStateOf(initDate)
+    }
+
+    return remember(
+        initDate,
+        positive,
+        negative
+    ){
+        AppDialog().apply {
+            withSpace(8.dp)
+            withTitle(
+                title
+            )
+            withView {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    @Composable
+                    fun chooseTab(
+                        text: String,
+                        value: String,
+                        selected: Boolean,
+                        onSelect: () -> Unit,
+                    ) {
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onSelect()
+                            }
+                            .padding(Gap.Mid),
+                            verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .height(20.dp)
+                                    .width(2.dp)
+                                    .background(colors.secondary)
+                            )
+                            Spacer(modifier = Modifier.width(Gap.Big))
+                            Text(
+                                text, style = AppTypography.smallMsg,
+                                color = if (!selected) grey3 else colors.textPrimary
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                value, style = AppTypography.smallMsg,
+                                color = if (!selected) grey3 else colors.textPrimary
+                            )
+                        }
+                    }
+
+                    chooseTab("日期", date.value.toString, true) {}
+                    DatePicker(date.value.year,date.value.month,date.value.day){ y, m, d ->
+                        date.value = Date(y,m,d)
+                    }
+                }
+            }
+            positive(text = "确定") {
+                positive(date.value)
+                true
+            }
+
+            negative(text = "取消") {
+                negative()
+                true
+            }
+        }
+    }
+}
+
+@Composable
+fun rememberDateRangeDialog(
     positive: (DateRange) -> Unit ,
     negative: () -> Unit ,
     initDateRange: DateRange,

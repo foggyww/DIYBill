@@ -24,8 +24,8 @@ import com.example.diybill.ui.theme.colors
 @Composable
 fun CommonCard(
     modifier: Modifier,
-    verticalPadding: Dp = Gap.Large,
-    horizonPadding: Dp = Gap.Large,
+    verticalPadding: Dp = Gap.Big,
+    horizonPadding: Dp = Gap.Big,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(Gap.Big,Alignment.Top),
     shape: CornerBasedShape = CardShapes.medium,
     content: @Composable ColumnScope.() -> Unit,
@@ -47,8 +47,8 @@ fun CommonCard(
 fun TitleCard(
     modifier: Modifier,
     title: String,
-    verticalPadding: Dp = Gap.Large,
-    horizonPadding: Dp = Gap.Large,
+    verticalPadding: Dp = Gap.Big,
+    horizonPadding: Dp = Gap.Big,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(Gap.Big,Alignment.Top),
     content: @Composable ColumnScope.() -> Unit,
 ) {

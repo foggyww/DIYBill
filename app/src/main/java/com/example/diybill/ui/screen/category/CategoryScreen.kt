@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.DialogProperties
@@ -45,7 +46,7 @@ import com.example.diybill.ui.widgets.CommonCard
 import com.example.diybill.ui.widgets.EasyImage
 import com.example.diybill.ui.widgets.SelectType
 import com.example.diybill.ui.widgets.TextHeader
-import com.example.diybill.ui.widgets.rememberChooseDateDialog
+import com.example.diybill.ui.widgets.rememberDateRangeDialog
 import com.example.diybill.utils.DateRange
 import com.example.diybill.utils.click
 import com.example.diybill.utils.toString
@@ -201,7 +202,7 @@ fun CategoryDialog(
     content:@Composable ()->Unit
 ){
     val context = LocalContext.current
-    val dateDialog = rememberChooseDateDialog(
+    val dateDialog = rememberDateRangeDialog(
         positive = {
             vm.changeDateRange(it)
             showDateRange.value = false
