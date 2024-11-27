@@ -111,25 +111,25 @@ fun SettingScreen(
             )
         }
         Spacer(modifier = Modifier.height(Gap.Large))
-        TitleCard(
-            modifier = Modifier.fillMaxWidth(),
-            title = "权限设置"
-        ) {
-            SwitchItem(
-                text = "悬浮窗",
-                selected = permissionMap[AppPermission.OverlaysPermission]!!
-            ) {
-                permissionUtil.requestOverlaysPermission()
-            }
-            SwitchItem(
-                text = "设备使用情况",
-                selected = permissionMap[AppPermission.UsagePermission]!!
-            ) {
-                permissionUtil.requestUsagePermission()
-            }
-
-        }
-        Spacer(modifier = Modifier.height(Gap.Large))
+//        TitleCard(
+//            modifier = Modifier.fillMaxWidth(),
+//            title = "权限设置"
+//        ) {
+//            SwitchItem(
+//                text = "悬浮窗",
+//                selected = permissionMap[AppPermission.OverlaysPermission]!!
+//            ) {
+//                permissionUtil.requestOverlaysPermission()
+//            }
+//            SwitchItem(
+//                text = "设备使用情况",
+//                selected = permissionMap[AppPermission.UsagePermission]!!
+//            ) {
+//                permissionUtil.requestUsagePermission()
+//            }
+//
+//        }
+//        Spacer(modifier = Modifier.height(Gap.Large))
         TitleCard(
             modifier = Modifier.fillMaxWidth(),
             title = "功能设置"

@@ -57,9 +57,9 @@ class MyAccessibilityService : AccessibilityService() {
                 autoHelpers.forEach {
                     val packetName = packageName.toString()
                     val className = className.toString()
-                    if (className.startsWith("com.tencent.mm")||className.startsWith("com.alipay")) {
-                        showFloatingWindow(className)
-                    }
+//                    if (className.startsWith("com.tencent.mm")||className.startsWith("com.alipay")) {
+//                        showFloatingWindow(className)
+//                    }
                     //尝试开启监视
                     it.tryStartWatch(className, packetName)
                     //若成功开启监视且检测成功
