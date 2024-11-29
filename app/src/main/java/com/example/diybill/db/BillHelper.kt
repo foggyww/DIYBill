@@ -13,15 +13,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
+/**
+ * 账单类
+ */
 data class Bill(
-    val id:Int,
-    val name: String,
-    val msg: String,
-    val type: Type,
-    val amount: String,
-    val date: Date,
-    val source:String,
-    val urls:List<String>
+    val id:Int, //账单ID
+    val name: String, //账单名称
+    val msg: String, //账单附属信息（暂无用）
+    val type: Type, //账单种类（支出和收入）
+    val amount: String, //账单金额
+    val date: Date, //账单日期
+    val source:String, //账单来源
+    val urls:List<String> //账单的图片Url
 )
 
 const val FROM_OHTER = 0

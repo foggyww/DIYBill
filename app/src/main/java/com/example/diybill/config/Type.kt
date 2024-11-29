@@ -1,5 +1,8 @@
 package com.example.diybill.config
 
+/**
+ * 支出类
+ */
 enum class OutlayType(override val cnName:String):Type{
     Eating("吃饭"),
     Cloth("衣物"),
@@ -13,10 +16,13 @@ enum class OutlayType(override val cnName:String):Type{
 }
 
 interface Type{
-    val cnName:String
-    val isOutlay:Boolean
+    val cnName:String //种类的名称
+    val isOutlay:Boolean //是否为支出账单
 }
 
+/**
+ * 收入类
+ */
 enum class IncomeType(override val cnName: String):Type{
     Work("工资"),
     Dividends("分红"),

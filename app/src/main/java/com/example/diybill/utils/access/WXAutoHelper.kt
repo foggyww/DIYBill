@@ -71,23 +71,17 @@ class WXAutoHelper : AutoHelper(PACKET_NAME, listOf(CLASS_NAME1, CLASS_NAME2)) {
         className: String,
         windowId: Int,
         content: String,
-        onSuccess: () -> Unit,
-    ) {
+    ):AutoRecord {
         val list = content.split("\n")
         for (i in list.indices) {
             if (list[i].contains('￥')) {
                 val msg = list[i - 1]
                 Regex("\\d+\\.\\d+").find(list[i])?.value?.let { amount ->
-                    insertBill(
-                        AutoRecord(msg, amount, packetName, className, windowId),
-                        "微信支付",
-                        onSuccess = {
-                            onSuccess()
-                        }
-                    )
+                    return AutoRecord(msg, amount, packetName, className, windowId,"微信支付")
                 }
             }
         }
+        throw Throwable("未找到自动记账内容")
     }
 
 }

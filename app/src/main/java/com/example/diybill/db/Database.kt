@@ -40,6 +40,10 @@ data class AutoRecord(
      * 窗口ID
      */
     val windowId:Int,
+    /**
+     * 来源
+     */
+    val source: String
 ){
     @PrimaryKey(autoGenerate = true)
     var id:Int = 0

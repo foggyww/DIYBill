@@ -74,14 +74,12 @@ class ALIAutoHelper : AutoHelper(PACKET_NAME, listOf(CLASS_NAME1)) {
 //        }
 //    }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override suspend fun resolveContent(
         packetName: String,
         className: String,
         windowId: Int,
         content: String,
-        onSuccess: () -> Unit,
-    ) {
+    ):AutoRecord {
         val list = content.split("\n")
         for (i in list.indices) {
             if (list[i].contains('￥')) {
@@ -93,16 +91,11 @@ class ALIAutoHelper : AutoHelper(PACKET_NAME, listOf(CLASS_NAME1)) {
                 }
                 if(msg.isNotEmpty()){
                     Regex("\\d+\\.\\d+").find(list[i])?.value?.let { amount ->
-                        insertBill(
-                            AutoRecord(msg, amount, packetName, className, windowId),
-                            "支付宝",
-                            onSuccess = {
-                                onSuccess()
-                            }
-                        )
+                        return AutoRecord(msg, amount, packetName, className, windowId,"支付宝")
                     }
                 }
             }
         }
+        throw Throwable("未找到对应的信息")
     }
 }
