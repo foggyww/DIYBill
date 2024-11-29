@@ -15,6 +15,7 @@ import com.example.diybill.utils.AppCache
 import com.example.diybill.utils.AppFile
 import com.example.diybill.utils.Date
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class UpdateViewModel : ViewModel() {
@@ -31,6 +32,7 @@ class UpdateViewModel : ViewModel() {
                         imageList.addAll(it.urls.map { u->
                             Pair(true,u)
                         })
+                        initImageList = it.urls
                     },
                     onError = {
                         App.CONTEXT.toast("账单加载失败！")
@@ -38,6 +40,13 @@ class UpdateViewModel : ViewModel() {
                 ))
         }
         initial = true
+    }
+
+    fun removeImage(index:Int){
+        val url = imageList[index]
+        viewModelScope.launch {
+            AppFile.delete("images/$url")
+        }
     }
 
     fun updateBill(
@@ -61,6 +70,11 @@ class UpdateViewModel : ViewModel() {
                         it.second
                     }
                 }
+            initImageList?.forEach {
+                if(!uriList.contains(it)){
+                    AppFile.delete("images/$it")
+                }
+            }
             bill.value?.let {
                 BillHelper.updateBill(
                     it.copy(
@@ -84,6 +98,6 @@ class UpdateViewModel : ViewModel() {
             BillHelper.deleteBill(bill,ioCallback)
         }
     }
-
+    private var initImageList :List<String>? = null
     val imageList = mutableStateListOf<Pair<Boolean, String>>()
 }
