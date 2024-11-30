@@ -32,7 +32,7 @@ android {
         }
         debug {
             applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "FocusCat_Dev")
+            resValue("string", "app_name", "DIYBill_Dev")
         }
     }
     compileOptions {
