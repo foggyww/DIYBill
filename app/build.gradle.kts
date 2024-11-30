@@ -30,6 +30,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            applicationIdSuffix = ".dev"
+            resValue("string", "app_name", "FocusCat_Dev")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
