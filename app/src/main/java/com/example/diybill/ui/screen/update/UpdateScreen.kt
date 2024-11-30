@@ -165,8 +165,8 @@ fun UpdateScreen(
                             onValueChange = {
                                 try {
                                     val bd = BigDecimal(it).setScale(2)
-                                    if (bd <= BigDecimal("10000.00")
-                                        && bd >= BigDecimal("0.00")
+                                    if (bd <= BigDecimal(Config.AMOUNT_MAX_LENGTH)
+                                        && bd >= BigDecimal(Config.AMOUNT_MIN_LENGTH)
                                     ) {
                                         amount.value = it
                                     }

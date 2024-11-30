@@ -49,16 +49,16 @@ class MainViewModel : BaseViewModel<MainState>(MainState()) {
         if(initialed) return
         viewModelScope.launch(Dispatchers.IO){
             BillHelper.collectOutlayList(IOCallback(
-                onCompleted = {
-                    it.onSuccess { list->
+                onCompleted = { mFlow->
+                    mFlow.onSuccess { list->
                         _state.update { s->
                             s.copy(billState = BillState(list.toDayBillList))
                         }
                     }
-                        .onError { t->
-                            toast("加载失败！"+t.message)
-                        }
-                        .execute()
+                    .onError { t->
+                        toast("加载失败！"+t.message)
+                    }
+                    .execute()
                 }
             ))
         }

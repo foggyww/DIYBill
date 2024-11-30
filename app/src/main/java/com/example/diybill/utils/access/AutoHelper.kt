@@ -21,7 +21,7 @@ abstract class AutoHelper(
 
     protected abstract val startWith:String
 
-    private var oldContent = ""
+    private var hasRecord = false
     /**
      * @param autoRecord:由子类处理后的自动记账的记录信息
      * @param onSuccess:执行成功后
@@ -65,7 +65,7 @@ abstract class AutoHelper(
         } else if(className.startsWith(startWith)){
             if(isWatching){
                 this.isWatching = false
-                oldContent = ""
+                hasRecord = false
             }
         }
     }
@@ -79,8 +79,8 @@ abstract class AutoHelper(
      */
     abstract fun checkTarget(root: AccessibilityNodeInfo): Boolean
 
-    private fun checkRepeat(content: String): Boolean {
-        return oldContent != content
+    private fun checkRepeat(): Boolean {
+        return !hasRecord
     }
 
     /**
@@ -111,10 +111,10 @@ abstract class AutoHelper(
         GlobalScope.launch(Dispatchers.IO) {
             mutex.lock()
             try {
-                if(checkRepeat(content)) {
+                if(checkRepeat()) {
                     val auto = resolveContent(packetName, className, windowId, content)
                     insertBill(auto,onSuccess)
-                    oldContent = content
+                    hasRecord = true
                 }
             } catch (t: Throwable) {
                 t.printStackTrace()
